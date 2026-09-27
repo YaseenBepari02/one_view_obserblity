@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL ───────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: oneview
+      POSTGRES_PASSWORD: oneview
+      POSTGRES_DB: oneview
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oneview"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── Redis ────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── FastAPI Backend ──────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.api
+    ports:
+      - "8000:8000"
+    environment:
+      ONEVIEW_DATABASE_URL: postgresql+asyncpg://oneview:oneview@postgres:5432/oneview
+      ONEVIEW_REDIS_URL: redis://redis:6379/0
+      ONEVIEW_DEMO_MODE: "true"
+      ONEVIEW_DEBUG: "true"
+      ONEVIEW_SECRET_KEY: dev-secret-key-change-me-in-production
+      ONEVIEW_CORS_ORIGINS: '["http://localhost:3000"]'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  # ── Next.js Frontend ─────────────────────────────────────────────
+  web:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.web
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://api:8000/api/v1
+    depends_on:
+      - api
+
+volumes:
+  pgdata:

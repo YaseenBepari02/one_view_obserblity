@@ -1,0 +1,30 @@
+/* components/layout/DashboardShell/DashboardShell.css — COMPONENT layer */
+.ov-shell {
+  min-height: 100vh;
+}
+.ov-shell-content {
+  margin-left: var(--ov-sidebar-width-compact);
+  margin-top: var(--ov-header-height);
+  padding: var(--ov-space-5);
+  transition: margin-left var(--ov-transition-slow);
+  min-height: calc(100vh - var(--ov-header-height));
+}
+.ov-shell-content.sidebar-expanded {
+  margin-left: var(--ov-sidebar-width-expanded);
+}
+.ov-demo-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--ov-space-2);
+  padding: var(--ov-space-2) var(--ov-space-4);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: var(--ov-radius-md);
+  color: var(--ov-status-warning);
+  font-size: var(--ov-font-size-sm);
+  font-weight: var(--ov-font-weight-medium);
+  margin-bottom: var(--ov-space-5);
+}
+.ov-demo-banner-icon {
+  flex-shrink: 0;
+}

@@ -1,0 +1,135 @@
+/* components/layout/Sidebar/Sidebar.css — COMPONENT layer */
+.ov-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--ov-sidebar-width-compact);
+  background: var(--ov-bg-sidebar);
+  border-right: 1px solid var(--ov-border);
+  display: flex;
+  flex-direction: column;
+  z-index: var(--ov-z-sidebar);
+  transition: width var(--ov-transition-slow);
+  overflow: hidden;
+}
+.ov-sidebar.is-expanded {
+  width: var(--ov-sidebar-width-expanded);
+}
+.ov-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--ov-space-3);
+  padding: var(--ov-space-4);
+  height: var(--ov-header-height);
+  border-bottom: 1px solid var(--ov-border);
+  flex-shrink: 0;
+}
+.ov-sidebar-brand-icon {
+  width: 24px;
+  height: 24px;
+  background: var(--ov-primary);
+  border-radius: var(--ov-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--ov-text-on-primary);
+  font-weight: var(--ov-font-weight-bold);
+  font-size: var(--ov-font-size-sm);
+}
+.ov-sidebar-brand-text {
+  font-size: var(--ov-font-size-md);
+  font-weight: var(--ov-font-weight-semibold);
+  color: var(--ov-sidebar-text);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--ov-transition-slow);
+}
+.ov-sidebar.is-expanded .ov-sidebar-brand-text {
+  opacity: 1;
+}
+.ov-sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--ov-space-2) var(--ov-space-2);
+  gap: var(--ov-space-1);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.ov-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ov-space-3);
+  padding: var(--ov-space-2) var(--ov-space-3);
+  border-radius: var(--ov-radius-md);
+  color: var(--ov-sidebar-text-muted);
+  font-size: var(--ov-font-size-base);
+  font-weight: var(--ov-font-weight-medium);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--ov-transition-fast), color var(--ov-transition-fast);
+}
+.ov-sidebar-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--ov-sidebar-text);
+}
+.ov-sidebar-item.is-active {
+  background: var(--ov-primary-muted);
+  color: var(--ov-primary);
+}
+.ov-sidebar-item-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+.ov-sidebar-item-label {
+  opacity: 0;
+  transition: opacity var(--ov-transition-slow);
+  overflow: hidden;
+}
+.ov-sidebar.is-expanded .ov-sidebar-item-label {
+  opacity: 1;
+}
+.ov-sidebar-section-label {
+  font-size: var(--ov-font-size-2xs);
+  font-weight: var(--ov-font-weight-semibold);
+  color: var(--ov-sidebar-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: var(--ov-space-3) var(--ov-space-3) var(--ov-space-1);
+  opacity: 0;
+  transition: opacity var(--ov-transition-slow);
+}
+.ov-sidebar.is-expanded .ov-sidebar-section-label {
+  opacity: 1;
+}
+.ov-sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ov-space-3);
+  border-top: 1px solid var(--ov-border);
+  flex-shrink: 0;
+}
+.ov-sidebar-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--ov-sidebar-text-muted);
+  cursor: pointer;
+  padding: var(--ov-space-2);
+  border-radius: var(--ov-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--ov-transition-fast);
+}
+.ov-sidebar-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}

@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: oneview
+      POSTGRES_PASSWORD: oneview
+      POSTGRES_DB: oneview
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  # Backend runs locally with hot reload — not in Docker
+  # Start with: cd apps/backend && uvicorn app.main:app --reload --port 8000
+
+  # Frontend runs locally with hot reload — not in Docker
+  # Start with: cd apps/frontend && npm run dev
+
+volumes:
+  pgdata_dev:

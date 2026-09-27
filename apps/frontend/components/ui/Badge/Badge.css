@@ -1,0 +1,46 @@
+/* components/ui/Badge/Badge.css — COMPONENT layer */
+.ov-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ov-space-1);
+  border-radius: var(--ov-radius-sm);
+  padding: 2px var(--ov-space-2);
+  font-size: var(--ov-font-size-xs);
+  font-weight: var(--ov-font-weight-semibold);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  line-height: 1.5;
+}
+.ov-badge-healthy,
+.ov-badge-success {
+  background: var(--ov-status-healthy-bg);
+  color: var(--ov-status-healthy);
+}
+.ov-badge-warning {
+  background: var(--ov-status-warning-bg);
+  color: var(--ov-status-warning);
+}
+.ov-badge-critical {
+  background: var(--ov-status-critical-bg);
+  color: var(--ov-status-critical);
+}
+.ov-badge-info {
+  background: var(--ov-status-info-bg);
+  color: var(--ov-status-info);
+}
+.ov-badge-unknown {
+  background: var(--ov-status-unknown-bg);
+  color: var(--ov-status-unknown);
+}
+.ov-badge-demo {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--ov-status-warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.ov-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}

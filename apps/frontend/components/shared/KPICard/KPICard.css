@@ -1,0 +1,38 @@
+/* components/shared/KPICard/KPICard.css */
+.ov-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ov-space-1);
+  padding: var(--ov-space-3) var(--ov-space-4);
+  background: var(--ov-bg-card);
+  border: 1px solid var(--ov-border);
+  border-radius: var(--ov-radius-lg);
+  min-width: 140px;
+}
+.ov-kpi-label {
+  font-size: var(--ov-font-size-xs);
+  font-weight: var(--ov-font-weight-medium);
+  color: var(--ov-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.ov-kpi-value {
+  font-size: var(--ov-font-size-2xl);
+  font-weight: var(--ov-font-weight-bold);
+  color: var(--ov-text-primary);
+  font-family: var(--ov-font-mono);
+  line-height: 1.2;
+}
+.ov-kpi-trend {
+  display: flex;
+  align-items: center;
+  gap: var(--ov-space-1);
+  font-size: var(--ov-font-size-xs);
+  font-weight: var(--ov-font-weight-medium);
+}
+.ov-kpi-trend-up { color: var(--ov-status-healthy); }
+.ov-kpi-trend-down { color: var(--ov-status-critical); }
+.ov-kpi-trend-flat { color: var(--ov-text-muted); }
+.ov-kpi-demo {
+  margin-left: auto;
+}

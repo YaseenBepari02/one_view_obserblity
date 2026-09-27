@@ -1,0 +1,44 @@
+/* components/ui/Card/Card.css — COMPONENT layer */
+.ov-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--ov-bg-card);
+  border: 1px solid var(--ov-border);
+  border-radius: var(--ov-radius-lg);
+  overflow: hidden;
+  transition: border-color var(--ov-transition-base);
+}
+.ov-card:hover {
+  border-color: var(--ov-border-strong);
+}
+.ov-card-interactive {
+  cursor: pointer;
+}
+.ov-card-interactive:hover {
+  background: var(--ov-bg-card-hover);
+}
+.ov-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--ov-space-3) var(--ov-space-4);
+  border-bottom: 1px solid var(--ov-border);
+}
+.ov-card-title {
+  font-size: var(--ov-font-size-sm);
+  font-weight: var(--ov-font-weight-semibold);
+  color: var(--ov-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.ov-card-body {
+  flex: 1;
+  padding: var(--ov-space-4);
+}
+.ov-card-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--ov-space-2);
+  padding: var(--ov-space-3) var(--ov-space-4);
+  border-top: 1px solid var(--ov-border);
+}

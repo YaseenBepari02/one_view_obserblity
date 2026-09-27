@@ -1,0 +1,106 @@
+/* ==========================================================================
+   ONEVIEW MONITOR — GLOBAL STYLESHEET
+   Resets, scrollbars, and third-party overrides ONLY.
+   ========================================================================== */
+@import '../theme/tokens.css';
+@import "tailwindcss";
+
+/* ── Reset ───────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--ov-font-sans);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--ov-bg-page);
+  color: var(--ov-text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ── Scrollbar (dark theme) ──────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ov-border-strong);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ov-text-muted);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ov-border-strong) transparent;
+}
+
+/* ── Focus visible ───────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--ov-focus-ring);
+}
+
+/* ── Links ───────────────────────────────────────────────────────────────── */
+a {
+  color: var(--ov-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--ov-primary-hover);
+}
+
+/* ── Table defaults ──────────────────────────────────────────────────────── */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* ── Code / mono ─────────────────────────────────────────────────────────── */
+code, pre, kbd, samp {
+  font-family: var(--ov-font-mono);
+}
+
+/* ── Selection ───────────────────────────────────────────────────────────── */
+::selection {
+  background: var(--ov-primary-muted);
+  color: var(--ov-text-primary);
+}
+
+/* ── Recharts overrides (dark theme) ─────────────────────────────────────── */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--ov-border);
+  stroke-opacity: 0.5;
+}
+
+.recharts-text {
+  fill: var(--ov-text-muted);
+  font-size: var(--ov-font-size-xs);
+}
+
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+/* trigger reload */

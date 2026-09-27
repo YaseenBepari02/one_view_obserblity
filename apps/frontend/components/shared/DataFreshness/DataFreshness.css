@@ -1,0 +1,24 @@
+/* components/shared/DataFreshness/DataFreshness.css */
+.ov-freshness {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ov-space-1);
+  font-size: var(--ov-font-size-xs);
+  font-weight: var(--ov-font-weight-medium);
+}
+.ov-freshness-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ov-freshness-live .ov-freshness-dot { background: var(--ov-status-healthy); }
+.ov-freshness-live { color: var(--ov-status-healthy); }
+.ov-freshness-recent .ov-freshness-dot { background: var(--ov-status-healthy); }
+.ov-freshness-recent { color: var(--ov-text-muted); }
+.ov-freshness-stale .ov-freshness-dot { background: var(--ov-status-warning); }
+.ov-freshness-stale { color: var(--ov-status-warning); }
+.ov-freshness-no-data .ov-freshness-dot { background: var(--ov-status-unknown); }
+.ov-freshness-no-data { color: var(--ov-text-muted); }
+.ov-freshness-error .ov-freshness-dot { background: var(--ov-status-critical); }
+.ov-freshness-error { color: var(--ov-status-critical); }

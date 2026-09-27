@@ -1,0 +1,40 @@
+# FastAPI & Server
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9
+
+# Database
+sqlalchemy[asyncio]==2.0.35
+asyncpg==0.29.0
+alembic==1.13.2
+
+# Validation
+pydantic==2.9.2
+pydantic-settings==2.5.2
+
+# Auth
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==3.2.2
+
+# Redis
+redis[hiredis]==5.1.1
+
+# Background Jobs
+apscheduler==3.10.4
+
+# AWS
+boto3==1.35.24
+
+# Docker
+docker==7.1.0
+
+# HTTP
+httpx==0.27.2
+
+# Utilities
+python-dotenv==1.0.1
+orjson==3.10.7
+
+# Host Metrics (cross-platform CPU, memory, disk, network)
+psutil>=5.9.0

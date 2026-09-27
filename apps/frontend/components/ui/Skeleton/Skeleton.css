@@ -1,0 +1,27 @@
+/* components/ui/Skeleton/Skeleton.css */
+.ov-skeleton {
+  background: var(--ov-bg-subtle);
+  border-radius: var(--ov-radius-md);
+  animation: ov-skeleton-pulse 1.5s ease-in-out infinite;
+}
+.ov-skeleton-text {
+  height: 12px;
+  border-radius: var(--ov-radius-sm);
+  margin-bottom: var(--ov-space-2);
+}
+.ov-skeleton-text:last-child {
+  width: 60%;
+}
+.ov-skeleton-circle {
+  border-radius: 50%;
+}
+.ov-skeleton-card {
+  height: 160px;
+}
+.ov-skeleton-chart {
+  height: 200px;
+}
+@keyframes ov-skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
