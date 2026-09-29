@@ -1,21 +1,27 @@
-/* components/layout/Sidebar/Sidebar.css — COMPONENT layer */
+/* components/layout/Sidebar/Sidebar.css — COMPONENT layer
+   Design: Salesforce Lightning dark nav + Apple HIG sidebar */
 .ov-sidebar {
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   width: var(--ov-sidebar-width-compact);
-  background: var(--ov-bg-sidebar);
-  border-right: 1px solid var(--ov-border);
+  background: var(--ov-bg-sidebar-glass);
+  backdrop-filter: blur(48px) saturate(200%);
+  -webkit-backdrop-filter: blur(48px) saturate(200%);
+  border-right: none;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   z-index: var(--ov-z-sidebar);
   transition: width var(--ov-transition-slow);
   overflow: hidden;
 }
+
 .ov-sidebar.is-expanded {
   width: var(--ov-sidebar-width-expanded);
 }
+
 .ov-sidebar-brand {
   display: flex;
   align-items: center;
@@ -25,11 +31,12 @@
   border-bottom: 1px solid var(--ov-border);
   flex-shrink: 0;
 }
+
 .ov-sidebar-brand-icon {
-  width: 24px;
-  height: 24px;
-  background: var(--ov-primary);
-  border-radius: var(--ov-radius-sm);
+  width: 26px;
+  height: 26px;
+  background: linear-gradient(135deg, var(--ov-primary) 0%, var(--ov-accent) 100%);
+  border-radius: var(--ov-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,7 +44,9 @@
   color: var(--ov-text-on-primary);
   font-weight: var(--ov-font-weight-bold);
   font-size: var(--ov-font-size-sm);
+  box-shadow: var(--ov-sidebar-brand-shadow);
 }
+
 .ov-sidebar-brand-text {
   font-size: var(--ov-font-size-md);
   font-weight: var(--ov-font-weight-semibold);
@@ -45,19 +54,41 @@
   white-space: nowrap;
   opacity: 0;
   transition: opacity var(--ov-transition-slow);
+  letter-spacing: -0.01em;
 }
+
 .ov-sidebar.is-expanded .ov-sidebar-brand-text {
   opacity: 1;
 }
+
 .ov-sidebar-nav {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: var(--ov-space-2) var(--ov-space-2);
-  gap: var(--ov-space-1);
+  padding: var(--ov-space-2);
+  gap: 2px;
   overflow-y: auto;
   overflow-x: hidden;
+
+  /* Liquid Blue Scroll Animation */
+  background: radial-gradient(circle at 50% calc(var(--scroll-percent, 0) * 100%), rgba(59, 130, 246, 0.15) 0%, transparent 50%);
+  background-attachment: local;
+  transition: background 0.1s ease-out;
 }
+
+.ov-sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ov-sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ov-sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
 .ov-sidebar-item {
   display: flex;
   align-items: center;
@@ -74,50 +105,63 @@
   text-align: left;
   text-decoration: none;
   white-space: nowrap;
-  transition: background var(--ov-transition-fast), color var(--ov-transition-fast);
+  transition:
+    background var(--ov-transition-fast),
+    color var(--ov-transition-fast);
 }
+
 .ov-sidebar-item:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--ov-sidebar-hover-bg);
   color: var(--ov-sidebar-text);
 }
+
+/* Active item: Salesforce blue pill */
 .ov-sidebar-item.is-active {
-  background: var(--ov-primary-muted);
-  color: var(--ov-primary);
+  background: var(--ov-sidebar-active-bg);
+  color: var(--ov-sidebar-active-color);
+  font-weight: var(--ov-font-weight-semibold);
 }
+
 .ov-sidebar-item-icon {
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
+
 .ov-sidebar-item-label {
   opacity: 0;
   transition: opacity var(--ov-transition-slow);
   overflow: hidden;
 }
+
 .ov-sidebar.is-expanded .ov-sidebar-item-label {
   opacity: 1;
 }
+
 .ov-sidebar-section-label {
   font-size: var(--ov-font-size-2xs);
   font-weight: var(--ov-font-weight-semibold);
   color: var(--ov-sidebar-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   padding: var(--ov-space-3) var(--ov-space-3) var(--ov-space-1);
   opacity: 0;
   transition: opacity var(--ov-transition-slow);
 }
+
 .ov-sidebar.is-expanded .ov-sidebar-section-label {
   opacity: 1;
 }
+
 .ov-sidebar-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--ov-space-3);
-  border-top: 1px solid var(--ov-border);
+  padding: var(--ov-space-2) var(--ov-space-3);
+  border-bottom: 1px solid var(--ov-border);
   flex-shrink: 0;
 }
+
 .ov-sidebar-toggle-btn {
   background: transparent;
   border: none;
@@ -128,8 +172,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background var(--ov-transition-fast);
+  transition: background var(--ov-transition-fast), color var(--ov-transition-fast);
 }
+
 .ov-sidebar-toggle-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--ov-sidebar-hover-bg);
+  color: var(--ov-sidebar-text);
 }

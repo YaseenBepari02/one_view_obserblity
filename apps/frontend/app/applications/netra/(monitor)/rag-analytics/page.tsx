@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { 
@@ -183,7 +183,7 @@ export default function NetraRagAnalyticsPage() {
                 <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#849495', fontFamily: 'monospace' }} dy={10} />
                 <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#849495', fontFamily: 'monospace' }} />
                 <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={false} />
-                <Tooltip contentStyle={{ background: '#111827', border: '1px solid #1E293B', borderRadius: 6, fontSize: 12 }} />
+                <Tooltip contentStyle={{ background: 'var(--ov-bg-card)', border: '1px solid var(--ov-border)', borderRadius: 6, fontSize: 12 }} />
                 <Bar yAxisId="left" dataKey="input" stackId="a" fill="#00F2FE" barSize={16} radius={[0, 0, 4, 4]} />
                 <Bar yAxisId="left" dataKey="output" stackId="a" fill="#c084fc" barSize={16} radius={[4, 4, 0, 0]} />
                 <Line yAxisId="right" type="monotone" dataKey="spend" stroke="#10B981" strokeWidth={2} dot={false} />

@@ -8,17 +8,10 @@ import {
 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import type { TimeRange } from '@/types';
+import { SearchField } from '@/components/ui/heroui-search-field';
+import { Label } from '@heroui/react';
 
-const TIME_RANGES: { value: TimeRange; label: string }[] = [
-  { value: '5m', label: '5m' },
-  { value: '15m', label: '15m' },
-  { value: '30m', label: '30m' },
-  { value: '1h', label: '1h' },
-  { value: '6h', label: '6h' },
-  { value: '24h', label: '24h' },
-  { value: '7d', label: '7d' },
-  { value: '30d', label: '30d' },
-];
+
 
 const ENVIRONMENTS = ['Dev', 'QA', 'UAT', 'Prod'];
 
@@ -26,6 +19,7 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const {
     sidebarExpanded, timeRange, setTimeRange,
     environment, setEnvironment, user,
@@ -70,18 +64,7 @@ export function Header() {
           <option value="blackline">Blackline</option>
         </select>
 
-        {/* Time Range */}
-        <div className="ov-header-time-range">
-          {TIME_RANGES.map((tr) => (
-            <button
-              key={tr.value}
-              className={cn('ov-header-time-btn', timeRange === tr.value && 'is-active')}
-              onClick={() => setTimeRange(tr.value)}
-            >
-              {tr.label}
-            </button>
-          ))}
-        </div>
+
 
         {/* Refresh */}
         <button className="ov-header-icon-btn" title="Refresh">
@@ -89,45 +72,62 @@ export function Header() {
         </button>
       </div>
 
-      <div className="ov-header-right">
-        {/* Theme Toggle */}
-        <button 
-          className="ov-header-icon-btn" 
-          title={mounted && theme === 'light' ? "Switch to Dark Mode" : "Switch to Light Mode"} 
-          onClick={toggleTheme}
-          aria-label="Toggle Theme"
-        >
-          {!mounted ? <Sun size={14} /> : theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-        </button>
-
+      <div className="ov-header-right" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         {/* Search */}
-        <button className="ov-header-icon-btn" title="Search">
-          <Search size={14} />
-        </button>
+        {!isSearchExpanded ? (
+          <button 
+            className="ov-header-icon-btn" 
+            title="Search" 
+            onClick={() => setIsSearchExpanded(true)}
+          >
+            <Search size={14} />
+          </button>
+        ) : (
+          <div className="animate-in fade-in slide-in-from-right-4 duration-300 ease-out flex items-center">
+            <SearchField name="search" className="relative group">
+              <SearchField.Group className="flex items-center bg-[var(--ov-bg-card)] border border-[var(--ov-border)] rounded-[8px] px-3 py-1.5 focus-within:ring-2 focus-within:ring-[var(--ov-primary)] focus-within:border-[var(--ov-primary)] transition-all shadow-sm">
+                <SearchField.SearchIcon className="text-[var(--ov-text-muted)] w-3.5 h-3.5 mr-2 opacity-70" />
+                <SearchField.Input 
+                  autoFocus 
+                  className="w-[240px] bg-transparent border-none outline-none focus:outline-none focus:ring-0 text-[13px] text-[var(--ov-text-primary)] placeholder:text-[var(--ov-text-muted)] m-0 p-0 shadow-none" 
+                  placeholder="Search applications, logs, or sessions..." 
+                  onBlur={(e) => {
+                    if (!e.target.value) setIsSearchExpanded(false);
+                  }}
+                  style={{ boxShadow: 'none' }}
+                />
+                <SearchField.ClearButton className="text-[var(--ov-text-muted)] hover:text-[var(--ov-text-primary)] w-3.5 h-3.5 ml-2 cursor-pointer outline-none" />
+              </SearchField.Group>
+            </SearchField>
+          </div>
+        )}
 
-        {/* Notifications */}
-        <button className="ov-header-icon-btn" title="Alerts">
-          <Bell size={14} />
-          <span className="ov-header-badge">2</span>
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Theme Toggle */}
+          <button 
+            className="ov-header-icon-btn" 
+            title={mounted && theme === 'light' ? "Switch to Dark Mode" : "Switch to Light Mode"} 
+            onClick={toggleTheme}
+            aria-label="Toggle Theme"
+          >
+            {!mounted ? <Sun size={14} /> : theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+          </button>
 
-        {/* Environment */}
-        <select
-          className="ov-header-env"
-          value={environment}
-          onChange={(e) => setEnvironment(e.target.value)}
-        >
-          {ENVIRONMENTS.map((env) => (
-            <option key={env} value={env.toLowerCase()}>
-              {env}
-            </option>
-          ))}
-        </select>
+          {/* Notifications */}
+          <button 
+            className="ov-header-icon-btn" 
+            title="Alerts"
+            onClick={() => alert("No new notifications")}
+          >
+            <Bell size={14} />
+            <span className="ov-header-badge">2</span>
+          </button>
 
-        {/* User */}
-        <div className="ov-header-user">
-          <div className="ov-header-avatar">
-            {user?.username?.charAt(0).toUpperCase() || 'A'}
+          {/* User */}
+          <div className="ov-header-user">
+            <div className="ov-header-avatar">
+              {user?.username?.charAt(0).toUpperCase() || 'A'}
+            </div>
           </div>
         </div>
       </div>

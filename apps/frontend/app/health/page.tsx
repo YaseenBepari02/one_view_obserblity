@@ -7,6 +7,17 @@ import {
   Building2, Activity, ArrowRight, AlertTriangle, 
   CheckCircle2, Clock, ActivitySquare, Server
 } from 'lucide-react';
+import { ApplicationCard } from '@/components/ui/ApplicationCard/ApplicationCard';
+import { useAppStore } from '@/lib/stores/app-store';
+import { cn } from '@/lib/utils';
+import type { TimeRange } from '@/types';
+
+const HEALTH_TIME_RANGES: { value: TimeRange; label: string }[] = [
+  { value: '5m', label: '5m' },
+  { value: '30m', label: '30m' },
+  { value: '1h', label: '1h' },
+  { value: '24h', label: '24h' }
+];
 
 interface AppSummary {
   id: string;
@@ -22,6 +33,7 @@ export default function GlobalHealthPage() {
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [mounted, setMounted] = useState(false);
+  const { timeRange, setTimeRange } = useAppStore();
 
   useEffect(() => {
     setMounted(true);
@@ -91,6 +103,17 @@ export default function GlobalHealthPage() {
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', color: 'var(--ov-text-secondary)', fontSize: '14px', fontWeight: 500 }}>
+          <div className="ov-header-time-range" style={{ marginRight: '8px' }}>
+            {HEALTH_TIME_RANGES.map((tr) => (
+              <button
+                key={tr.value}
+                className={cn('ov-header-time-btn', timeRange === tr.value && 'is-active')}
+                onClick={() => setTimeRange(tr.value)}
+              >
+                {tr.label}
+              </button>
+            ))}
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Server size={16} />
             {apps.length} applications
@@ -134,101 +157,19 @@ export default function GlobalHealthPage() {
             const bg = getStatusBg(state);
 
             return (
-              <div 
-                key={app.id} 
-                style={{ 
-                  borderRadius: '16px', 
-                  border: '1px solid var(--ov-border)', 
-                  background: 'var(--ov-bg-card)',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  boxShadow: 'var(--ov-shadow-sm)'
+              <ApplicationCard
+                key={app.id}
+                id={app.id}
+                name={app.name}
+                description={`Cluster: ${h.cluster_id || 'prod-us-east-1'} • Owner: ${app.name} Team`}
+                status={state}
+                environment={app.environment}
+                metrics={{
+                  uptime: h.uptime_percent !== undefined ? `${h.uptime_percent}%` : '--',
+                  latency: h.p95_latency_ms !== undefined ? `${h.p95_latency_ms}ms` : '--',
+                  errorRate: h.error_rate !== undefined ? `${h.error_rate}%` : '--'
                 }}
-              >
-                {/* Top decorative line matching status */}
-                <div style={{ height: '4px', width: '100%', background: color }} />
-                
-                <div style={{ padding: '24px', flex: 1 }}>
-                  {/* Card Header */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--ov-bg-surface)', border: '1px solid var(--ov-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ov-text-primary)' }}>
-                        {app.id.substring(0, 2).toUpperCase()}
-                      </div>
-                      <div>
-                        <h2 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--ov-text-primary)' }}>{app.name}</h2>
-                        <p style={{ fontSize: '12px', color: 'var(--ov-text-muted)', margin: '4px 0 0 0' }}>
-                          Environment: {app.environment.toUpperCase()}
-                        </p>
-                      </div>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
-                      <span style={{ fontSize: '10px', fontFamily: 'monospace', padding: '2px 8px', borderRadius: '12px', background: 'var(--ov-bg-surface)', border: '1px solid var(--ov-border)', color: 'var(--ov-text-secondary)', fontWeight: 600 }}>
-                        APP-{app.id.toUpperCase().substring(0,4)}
-                      </span>
-                      <span style={{ fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '12px', background: bg, color: color, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        {state === 'healthy' ? 'Stable' : state}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Location / Owner */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', fontSize: '12px', color: 'var(--ov-text-secondary)', fontWeight: 500 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <Server size={14} />
-                      Cluster: {h.cluster_id || 'prod-us-east-1'}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <UserIcon size={14} />
-                      Owner: {app.name} Team
-                    </div>
-                  </div>
-
-                  {/* Metrics Grid */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
-                    <div style={{ padding: '16px 12px', borderRadius: '12px', background: 'var(--ov-bg-surface)', border: '1px solid var(--ov-border)', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                      <Activity size={18} color="var(--ov-status-critical)" style={{ marginBottom: '8px' }} />
-                      <div style={{ fontSize: '20px', fontWeight: 700, color: 'var(--ov-text-primary)', lineHeight: 1 }}>
-                        {h.uptime_percent !== undefined ? h.uptime_percent : '--'}%
-                      </div>
-                      <div style={{ fontSize: '11px', color: 'var(--ov-text-muted)', marginTop: '6px' }}>Uptime</div>
-                    </div>
-                    <div style={{ padding: '16px 12px', borderRadius: '12px', background: 'var(--ov-bg-surface)', border: '1px solid var(--ov-border)', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                      <Clock size={18} color="var(--ov-status-info)" style={{ marginBottom: '8px' }} />
-                      <div style={{ fontSize: '20px', fontWeight: 700, color: 'var(--ov-text-primary)', lineHeight: 1 }}>
-                        {h.p95_latency_ms !== undefined ? h.p95_latency_ms : '--'}
-                      </div>
-                      <div style={{ fontSize: '11px', color: 'var(--ov-text-muted)', marginTop: '6px' }}>Latency (ms)</div>
-                    </div>
-                    <div style={{ padding: '16px 12px', borderRadius: '12px', background: 'var(--ov-bg-surface)', border: '1px solid var(--ov-border)', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                      <AlertTriangle size={18} color="var(--ov-status-warning)" style={{ marginBottom: '8px' }} />
-                      <div style={{ fontSize: '20px', fontWeight: 700, color: 'var(--ov-text-primary)', lineHeight: 1 }}>
-                        {h.error_rate !== undefined ? h.error_rate : '--'}%
-                      </div>
-                      <div style={{ fontSize: '11px', color: 'var(--ov-text-muted)', marginTop: '6px' }}>Error Rate</div>
-                    </div>
-                  </div>
-
-                  {/* Status Note & View Button */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '16px', borderTop: '1px solid var(--ov-border)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontWeight: 500, color: color }}>
-                      <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: color }} />
-                      {state === 'healthy' ? 'All systems operational' : state === 'warning' ? 'Minor latency issues detected' : 'Critical failures reported'}
-                    </div>
-                    <button 
-                      onClick={() => router.push('/applications/' + app.id + '/health')}
-                      style={{ 
-                        display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 16px', 
-                        borderRadius: '8px', background: 'var(--ov-primary-muted)', color: 'var(--ov-primary)', 
-                        border: '1px solid transparent', fontSize: '13px', fontWeight: 600, cursor: 'pointer' 
-                      }}
-                    >
-                      View <ArrowRight size={14} />
-                    </button>
-                  </div>
-                </div>
-              </div>
+              />
             );
           })}
         </div>

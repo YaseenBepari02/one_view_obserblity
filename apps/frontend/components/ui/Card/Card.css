@@ -1,4 +1,5 @@
-/* components/ui/Card/Card.css — COMPONENT layer */
+/* components/ui/Card/Card.css — COMPONENT layer
+   Design: Salesforce Lightning + Apple HIG cards */
 .ov-card {
   display: flex;
   flex-direction: column;
@@ -6,16 +7,22 @@
   border: 1px solid var(--ov-border);
   border-radius: var(--ov-radius-lg);
   overflow: hidden;
-  transition: border-color var(--ov-transition-base);
+  box-shadow: var(--ov-shadow-sm);
+  transition:
+    border-color var(--ov-transition-base),
+    box-shadow   var(--ov-transition-base),
+    transform    var(--ov-transition-base);
 }
 .ov-card:hover {
   border-color: var(--ov-border-strong);
+  box-shadow: var(--ov-shadow-md);
 }
 .ov-card-interactive {
   cursor: pointer;
 }
 .ov-card-interactive:hover {
   background: var(--ov-bg-card-hover);
+  transform: translateY(-1px);
 }
 .ov-card-header {
   display: flex;
@@ -29,7 +36,7 @@
   font-weight: var(--ov-font-weight-semibold);
   color: var(--ov-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
 }
 .ov-card-body {
   flex: 1;
@@ -42,3 +49,4 @@
   padding: var(--ov-space-3) var(--ov-space-4);
   border-top: 1px solid var(--ov-border);
 }
+

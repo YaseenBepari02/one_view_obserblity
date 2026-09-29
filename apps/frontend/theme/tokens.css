@@ -1,154 +1,195 @@
 /* ==========================================================================
    ONEVIEW MONITOR — GLOBAL DESIGN TOKENS
+   Design System: Salesforce Lightning Design System + Apple Human Interface Guidelines
    Prefix: ov-
    Theme: Dark-first enterprise monitoring
-   This is the SINGLE SOURCE OF TRUTH for all visual values.
-   Module and Component stylesheets must reference these via var().
+   Primary / Button color: Salesforce Action Blue #0176D3
    ========================================================================== */
 :root {
-  /* ── Brand ─────────────────────────────────────────────────────────── */
-  --ov-primary: #00F2FE;
-  --ov-primary-hover: #00DCE6;
-  --ov-primary-muted: rgba(0, 242, 254, 0.15);
-  --ov-brand-primary: var(--ov-primary);
-  --ov-accent: #0066CC;
+  /* ── Brand / Action Blue (Salesforce #0176D3) ─────────────────────── */
+  --ov-primary:          #0176D3;
+  --ov-primary-hover:    #014486;
+  --ov-primary-active:   #032D60;
+  --ov-primary-muted:    rgba(1, 118, 211, 0.14);
+  --ov-primary-light:    rgba(1, 118, 211, 0.08);
+  --ov-brand-primary:    var(--ov-primary);
+  --ov-accent:           #1B96FF;
 
-  /* ── Backgrounds (dark theme — subtle elevation steps) ─────────────── */
-  --ov-bg-page: #0B0F17;
-  --ov-bg-surface: #0F131C;
-  --ov-bg-card: #111827;
-  --ov-bg-card-hover: #1A2234;
-  --ov-bg-sidebar: #0D131F;
-  --ov-bg-input: #181C24;
-  --ov-bg-subtle: #151F32;
-  --ov-bg-overlay: rgba(11, 15, 23, 0.8);
+  /* ── Button tokens (blue in both themes) ──────────────────────────── */
+  --ov-btn-bg:               #0176D3;
+  --ov-btn-bg-hover:         #014486;
+  --ov-btn-bg-active:        #032D60;
+  --ov-btn-text:             #FFFFFF;
+  --ov-btn-shadow:           0 2px 6px rgba(1, 118, 211, 0.35);
+  --ov-btn-shadow-hover:     0 4px 12px rgba(1, 118, 211, 0.45);
+  /* Outlined/ghost blue */
+  --ov-btn-outline-border:   #0176D3;
+  --ov-btn-outline-color:    #0176D3;
+  --ov-btn-outline-hover-bg: rgba(1, 118, 211, 0.10);
+  --ov-btn-outline-hover-border: #014486;
+  --ov-btn-outline-hover-color:  #014486;
 
-  /* ── Text ──────────────────────────────────────────────────────────── */
-  --ov-text-primary: #DFE2EE;
-  --ov-text-secondary: #B9CACB;
-  --ov-text-muted: #849495;
-  --ov-text-disabled: #3A494B;
-  --ov-text-on-primary: #0B0F17;
+  /* ── Header component tokens ──────────────────────────────────────── */
+  --ov-header-bg:            rgba(22, 22, 24, 0.88);
+  --ov-header-time-active-bg: #0176D3;
+  --ov-header-time-active-color: #FFFFFF;
+
+  /* ── Sidebar component tokens ─────────────────────────────────────── */
+  --ov-sidebar-active-bg:    rgba(1, 118, 211, 0.18);
+  --ov-sidebar-active-color: #4DB6FF;
+  --ov-sidebar-hover-bg:     rgba(255, 255, 255, 0.07);
+  --ov-sidebar-brand-shadow: 0 2px 8px rgba(1, 118, 211, 0.5);
+
+  /* ── Backgrounds (dark, macOS-style elevation) ────────────────────── */
+  --ov-bg-page:          #0F0F10;
+  --ov-bg-surface:       #161618;
+  --ov-bg-card:          #1C1C1E;
+  --ov-bg-card-hover:    #252528;
+  --ov-bg-sidebar:       #111113;
+  --ov-bg-sidebar-glass: rgba(28, 28, 30, 0.65); /* iOS Dark Material */
+  --ov-bg-input:         #1C1C1E;
+  --ov-bg-subtle:        #232325;
+  --ov-bg-overlay:       rgba(0, 0, 0, 0.72);
+
+  /* ── Text (Apple HIG dark text hierarchy) ───────────────────────────── */
+  --ov-text-primary:     #F5F5F7;
+  --ov-text-secondary:   #AEAEB2;
+  --ov-text-muted:       #6E6E73;
+  --ov-text-disabled:    #3A3A3C;
+  --ov-text-on-primary:  #FFFFFF;
 
   /* ── Sidebar Text ──────────────────────────────────────────────────── */
-  --ov-sidebar-text: #DFE2EE;
-  --ov-sidebar-text-muted: #849495;
+  --ov-sidebar-text:       #F5F5F7;
+  --ov-sidebar-text-muted: #8E8E93;
 
   /* ── Borders ───────────────────────────────────────────────────────── */
-  --ov-border: #1E293B;
-  --ov-border-strong: #26334D;
-  --ov-border-focus: #00F2FE;
+  --ov-border:          rgba(255, 255, 255, 0.08);
+  --ov-border-strong:   rgba(255, 255, 255, 0.14);
+  --ov-border-focus:    #0176D3;
 
-  /* ── Status (semantic — use only for functional meaning) ───────────── */
-  --ov-status-healthy: #10B981;
-  --ov-status-healthy-bg: rgba(16, 185, 129, 0.12);
-  --ov-status-warning: #F59E0B;
-  --ov-status-warning-bg: rgba(245, 158, 11, 0.12);
-  --ov-status-critical: #EF4444;
-  --ov-status-critical-bg: rgba(239, 68, 68, 0.12);
-  --ov-status-info: #00F2FE;
-  --ov-status-info-bg: rgba(0, 242, 254, 0.12);
-  --ov-status-unknown: #8B5CF6;
-  --ov-status-unknown-bg: rgba(139, 92, 246, 0.12);
+  /* ── Status (Salesforce SLDS semantic colors) ──────────────────────── */
+  --ov-status-healthy:          #2E844A;
+  --ov-status-healthy-bg:       rgba(46, 132, 74, 0.14);
+  --ov-status-warning:          #DD7A01;
+  --ov-status-warning-bg:       rgba(221, 122, 1, 0.14);
+  --ov-status-critical:         #C23934;
+  --ov-status-critical-bg:      rgba(194, 57, 52, 0.14);
+  --ov-status-info:             #0176D3;
+  --ov-status-info-bg:          rgba(1, 118, 211, 0.14);
+  --ov-status-unknown:          #706E6B;
+  --ov-status-unknown-bg:       rgba(112, 110, 107, 0.14);
 
-  /* ── Typography ────────────────────────────────────────────────────── */
-  --ov-font-sans: 'IBM Plex Sans', 'Inter', system-ui, -apple-system, sans-serif;
-  --ov-font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-  --ov-font-size-2xs: 0.625rem;   /* 10px */
-  --ov-font-size-xs: 0.6875rem;   /* 11px */
-  --ov-font-size-sm: 0.75rem;     /* 12px */
-  --ov-font-size-base: 0.8125rem; /* 13px */
-  --ov-font-size-md: 0.875rem;    /* 14px */
-  --ov-font-size-lg: 1rem;        /* 16px */
-  --ov-font-size-xl: 1.125rem;    /* 18px */
-  --ov-font-size-2xl: 1.5rem;     /* 24px */
-  --ov-font-size-3xl: 1.875rem;   /* 30px */
-  --ov-font-weight-regular: 400;
-  --ov-font-weight-medium: 500;
+  /* ── Typography (Apple SF Pro + Salesforce Sans fallback stack) ────── */
+  --ov-font-sans: var(--font-inter), -apple-system, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue',
+                  'Salesforce Sans', 'IBM Plex Sans', Arial, sans-serif;
+  --ov-font-mono: var(--font-jetbrains-mono), 'SF Mono', 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+  --ov-font-size-2xs:  0.625rem;    /* 10px */
+  --ov-font-size-xs:   0.6875rem;   /* 11px */
+  --ov-font-size-sm:   0.75rem;     /* 12px */
+  --ov-font-size-base: 0.8125rem;   /* 13px */
+  --ov-font-size-md:   0.875rem;    /* 14px */
+  --ov-font-size-lg:   1rem;        /* 16px */
+  --ov-font-size-xl:   1.125rem;    /* 18px */
+  --ov-font-size-2xl:  1.375rem;    /* 22px */
+  --ov-font-size-3xl:  1.75rem;     /* 28px */
+  --ov-font-weight-regular:  400;
+  --ov-font-weight-medium:   500;
   --ov-font-weight-semibold: 600;
-  --ov-font-weight-bold: 700;
+  --ov-font-weight-bold:     700;
 
-  /* ── Spacing scale ─────────────────────────────────────────────────── */
-  --ov-space-0: 0;
-  --ov-space-1: 0.25rem;   /* 4px */
-  --ov-space-2: 0.5rem;    /* 8px */
-  --ov-space-3: 0.75rem;   /* 12px */
-  --ov-space-4: 1rem;      /* 16px */
-  --ov-space-5: 1.5rem;    /* 24px */
-  --ov-space-6: 2rem;      /* 32px */
-  --ov-space-8: 3rem;      /* 48px */
-  --ov-space-10: 4rem;     /* 64px */
+  /* ── Spacing (8-pt grid — Apple & SLDS) ────────────────────────────── */
+  --ov-space-0:  0;
+  --ov-space-1:  0.25rem;   /*  4px */
+  --ov-space-2:  0.5rem;    /*  8px */
+  --ov-space-3:  0.75rem;   /* 12px */
+  --ov-space-4:  1rem;      /* 16px */
+  --ov-space-5:  1.5rem;    /* 24px */
+  --ov-space-6:  2rem;      /* 32px */
+  --ov-space-8:  3rem;      /* 48px */
+  --ov-space-10: 4rem;      /* 64px */
 
-  /* ── Radius scale ──────────────────────────────────────────────────── */
-  --ov-radius-sm: 4px;
-  --ov-radius-md: 6px;
-  --ov-radius-lg: 8px;
-  --ov-radius-xl: 12px;
+  /* ── Radius (Apple-style continuous rounded rectangles) ─────────────── */
+  --ov-radius-sm:  4px;
+  --ov-radius-md:  8px;
+  --ov-radius-lg:  12px;
+  --ov-radius-xl:  16px;
+  --ov-radius-2xl: 20px;
 
-  /* ── Shadows ───────────────────────────────────────────────────────── */
-  --ov-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --ov-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --ov-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  /* ── Shadows (macOS layered system shadows) ─────────────────────────── */
+  --ov-shadow-sm:   0 1px 2px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04);
+  --ov-shadow-md:   0 4px 16px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+  --ov-shadow-lg:   0 12px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06);
+  --ov-shadow-blue: 0 4px 14px rgba(1, 118, 211, 0.4);
 
-  /* ── Focus ring ────────────────────────────────────────────────────── */
-  --ov-focus-ring: 0 0 0 2px var(--ov-bg-page), 0 0 0 4px var(--ov-primary);
+  /* ── Focus ring ─────────────────────────────────────────────────────── */
+  --ov-focus-ring: 0 0 0 2px var(--ov-bg-page), 0 0 0 4px #0176D3;
 
-  /* ── Z-index scale ─────────────────────────────────────────────────── */
-  --ov-z-base: 0;
-  --ov-z-dropdown: 100;
-  --ov-z-sticky: 200;
-  --ov-z-sidebar: 300;
-  --ov-z-header: 400;
-  --ov-z-modal: 500;
-  --ov-z-toast: 600;
+  /* ── Z-index scale ──────────────────────────────────────────────────── */
+  --ov-z-base:      0;
+  --ov-z-dropdown:  100;
+  --ov-z-sticky:    200;
+  --ov-z-sidebar:   300;
+  --ov-z-header:    400;
+  --ov-z-modal:     500;
+  --ov-z-toast:     600;
 
-  /* ── Sidebar dimensions ────────────────────────────────────────────── */
-  --ov-sidebar-width-compact: 56px;
-  --ov-sidebar-width-expanded: 240px;
-  --ov-header-height: 48px;
+  /* ── Layout dimensions ──────────────────────────────────────────────── */
+  --ov-sidebar-width-compact:  56px;
+  --ov-sidebar-width-expanded: 248px;
+  --ov-header-height:          52px;
 
-  /* ── Transitions ───────────────────────────────────────────────────── */
-  --ov-transition-fast: 0.1s ease;
-  --ov-transition-base: 0.15s ease;
-  --ov-transition-slow: 0.25s ease;
+  /* ── Transitions (Apple spring easing) ─────────────────────────────── */
+  --ov-transition-fast: 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  --ov-transition-base: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  --ov-transition-slow: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ==========================================================================
-   LIGHT THEME OVERRIDES
+   LIGHT THEME OVERRIDES  (Salesforce Lightning light palette)
    Activated via <html data-theme="light">
    ========================================================================== */
 :root[data-theme='light'],
 [data-theme='light'],
 html[data-theme='light'] {
-  --ov-bg-page: #F8FAFC;
-  --ov-bg-surface: #FFFFFF;
-  --ov-bg-card: #FFFFFF;
-  --ov-bg-card-hover: #F1F5F9;
-  --ov-bg-sidebar: #0F172A;
-  --ov-bg-input: #FFFFFF;
-  --ov-bg-subtle: #F1F5F9;
-  --ov-bg-overlay: rgba(248, 250, 252, 0.85);
+  /* Backgrounds */
+  --ov-bg-page:         radial-gradient(at 0% 0%, rgba(240, 244, 255, 1) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(235, 245, 255, 1) 0px, transparent 50%), #F4F6F9;
+  --ov-bg-surface:      #FFFFFF;
+  --ov-bg-card:         #FFFFFF;
+  --ov-bg-card-hover:   #F9FAFB;
+  --ov-bg-sidebar:      #FFFFFF;
+  --ov-bg-sidebar-glass: rgba(255, 255, 255, 0.40); /* Truly transparent iOS Glass */
+  --ov-bg-input:        #FFFFFF;
+  --ov-bg-subtle:       #F0F4F8;
+  --ov-bg-overlay:      rgba(255, 255, 255, 0.85);
 
-  --ov-text-primary: #0F172A;
-  --ov-text-secondary: #334155;
-  --ov-text-muted: #64748B;
-  --ov-text-disabled: #94A3B8;
+  /* Text */
+  --ov-text-primary:    #0F172A;  /* Rich dark navy/black for premium feel */
+  --ov-text-secondary:  #475569;  /* Slate 600 */
+  --ov-text-muted:      #64748B;  /* Slate 500 */
+  --ov-text-disabled:   #94A3B8;
   --ov-text-on-primary: #FFFFFF;
 
-  --ov-sidebar-text: #F8FAFC;
-  --ov-sidebar-text-muted: #94A3B8;
+  /* Sidebar adapts to light mode theme */
+  --ov-sidebar-text:       #111111;
+  --ov-sidebar-text-muted: #6B7280;
 
-  --ov-border: #E2E8F0;
-  --ov-border-strong: #CBD5E1;
-  --ov-border-focus: #0284C7;
+  /* Borders */
+  --ov-border:          #E2E8F0;  /* Slate 200 */
+  --ov-border-strong:   #CBD5E1;  /* Slate 300 */
+  --ov-border-focus:    #0176D3;
 
-  --ov-primary: #0284C7;
-  --ov-primary-hover: #0369A1;
-  --ov-primary-muted: rgba(2, 132, 199, 0.12);
-  --ov-accent: #0284C7;
+  /* Shadows (premium soft Apple-style shadows) */
+  --ov-shadow-sm:   0 2px 8px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+  --ov-shadow-md:   0 10px 24px rgba(15, 23, 42, 0.06), 0 4px 8px rgba(15, 23, 42, 0.04);
+  --ov-shadow-lg:   0 20px 40px rgba(15, 23, 42, 0.08), 0 8px 16px rgba(15, 23, 42, 0.04);
+  --ov-shadow-blue: 0 8px 24px rgba(1, 118, 211, 0.25);
 
-  --ov-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --ov-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
-  --ov-shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.08);
+  /* Header (glass-white in light mode) */
+  --ov-header-bg: rgba(255, 255, 255, 0.88);
+
+  /* Sidebar active in light mode */
+  --ov-sidebar-active-bg:    rgba(1, 118, 211, 0.10);
+  --ov-sidebar-active-color: #0176D3;
+  --ov-sidebar-hover-bg:     rgba(0, 0, 0, 0.05);
 }
 

@@ -1,21 +1,31 @@
 "use client";
 
 import { useParams, useRouter, usePathname } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { api } from "@/lib/api/client";
 import { Skeleton } from "@/components/ui/Skeleton/Skeleton";
 import type { Application } from "@/types";
+import { 
+  LayoutDashboard, 
+  Activity, 
+  ScrollText, 
+  Users, 
+  Code, 
+  BrainCircuit, 
+  Server, 
+  Bell 
+} from "lucide-react";
 
 const APP_TABS = [
-  { id: "overview", label: "Overview", icon: "❖" },
-  { id: "health", label: "Health Monitor", icon: "∿" },
-  { id: "logs", label: "Logs", icon: "≡" },
-  { id: "users", label: "Users & Sessions", icon: "👥" },
-  { id: "api-usage", label: "API Usage", icon: "◎" },
-  { id: "cost", label: "Token & Cost", icon: "⛁" },
-  { id: "rag-analytics", label: "RAG Analytics", icon: "⎈" },
-  { id: "infrastructure", label: "Infrastructure", icon: "🖧" },
-  { id: "alerts", label: "Alerts", icon: "🔔" },
+  { id: "overview", label: "Overview", icon: LayoutDashboard },
+  { id: "health", label: "Health Monitor", icon: Activity },
+  { id: "logs", label: "Logs", icon: ScrollText },
+  { id: "users", label: "Users & Sessions", icon: Users },
+  { id: "api-usage", label: "API & Tokens", icon: Code },
+  { id: "rag-analytics", label: "RAG Analytics", icon: BrainCircuit },
+  { id: "infrastructure", label: "Infrastructure", icon: Server },
+  { id: "alerts", label: "Alerts", icon: Bell },
 ];
 
 export default function ApplicationLayout({ children }: { children: React.ReactNode }) {
@@ -24,10 +34,29 @@ export default function ApplicationLayout({ children }: { children: React.ReactN
   const pathname = usePathname();
   const appId = params.id as string;
 
-  const { data: app, isLoading } = useQuery<Application>({
+  const queryClient = useQueryClient();
+  const [isChecking, setIsChecking] = useState(false);
+
+  const { data: app, isLoading, refetch } = useQuery<Application>({
     queryKey: ["application", appId],
     queryFn: () => api.get(`/applications/${appId}`),
   });
+
+  const { data: healthData, refetch: refetchHealth } = useQuery({
+    queryKey: ['health', appId],
+    queryFn: () => api.get(`/applications/${appId}/health?live=true`),
+  });
+
+  const handleHealthCheck = async () => {
+    if (isChecking) return;
+    setIsChecking(true);
+    await refetch();
+    await refetchHealth();
+    await queryClient.invalidateQueries({ queryKey: ["health"] });
+    setTimeout(() => {
+      setIsChecking(false);
+    }, 1000);
+  };
 
   // Determine active tab based on pathname
   let activeTab = "overview";
@@ -59,11 +88,11 @@ export default function ApplicationLayout({ children }: { children: React.ReactN
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100%", background: "var(--ov-bg-page)" }}>
       {/* Top Breadcrumb & Global Status Row */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 24px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "11px", fontFamily: "monospace", color: "#94a3b8" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 24px", borderBottom: "1px solid var(--ov-border)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "11px", fontFamily: "monospace", color: "var(--ov-text-secondary)" }}>
           <button 
             onClick={() => router.push('/applications')}
-            style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", color: "#cbd5e1", cursor: "pointer", padding: 0 }}
+            style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", color: "var(--ov-text-muted)", cursor: "pointer", padding: 0 }}
           >
             <span style={{ fontSize: '14px' }}>←</span> Applications
           </button>
@@ -73,7 +102,7 @@ export default function ApplicationLayout({ children }: { children: React.ReactN
             CLUSTER ID: {appId.toUpperCase()}-PROD-01
           </span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "10px", fontFamily: "monospace", color: "#94a3b8", fontWeight: 600, letterSpacing: "0.05em" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "10px", fontFamily: "monospace", color: "var(--ov-text-secondary)", fontWeight: 600, letterSpacing: "0.05em" }}>
           <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10b981" }} />
             GATEWAY STREAM LIVE
@@ -84,7 +113,7 @@ export default function ApplicationLayout({ children }: { children: React.ReactN
       </div>
 
       {/* Main Header Area */}
-      <div style={{ padding: "24px", background: "linear-gradient(to bottom, rgba(15, 23, 42, 0.6), transparent)" }}>
+      <div style={{ padding: "24px", background: "var(--ov-bg-surface)", borderBottom: "1px solid var(--ov-border)" }}>
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: "24px" }}>
           {/* Left Info */}
           <div>
@@ -103,36 +132,70 @@ export default function ApplicationLayout({ children }: { children: React.ReactN
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "12px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#94a3b8" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--ov-text-secondary)" }}>
                 <span style={{ color: "var(--ov-text-muted)", width: '16px' }}>👥</span> Team: <span style={{ color: "var(--ov-text-primary)" }}>{app?.owner || "AI Platform & Retrieval Ops"}</span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#94a3b8" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--ov-text-secondary)" }}>
                 <span style={{ color: "var(--ov-text-muted)", width: '16px' }}>🚀</span> Last Deploy: <span style={{ color: "var(--ov-text-primary)", fontWeight: 600 }}>2h ago</span> via GitOps #8412
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#94a3b8" }}>
-                <span style={{ color: "#34d399", width: '16px' }}>🗘</span> Sync: <span style={{ color: "#34d399" }}>8s ago</span> (Docker Socket + S3 Parquet)
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--ov-text-secondary)" }}>
+                <span style={{ color: "var(--status-healthy)", width: '16px' }}>🗘</span> Sync: <span style={{ color: "var(--status-healthy)" }}>8s ago</span> (Docker Socket + S3 Parquet)
               </div>
             </div>
           </div>
 
           {/* Right Action Panel */}
           <div style={{ display: "flex", flexDirection: "column", gap: "12px", minWidth: "320px" }}>
-            <div style={{ background: "rgba(15, 23, 42, 0.8)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#34d399", fontWeight: 700, fontSize: "14px", letterSpacing: "0.05em" }}>
-                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#34d399" }} />
-                98/100 HEALTHY
+            <div style={{ background: "var(--ov-bg-card)", border: "1px solid var(--ov-border)", borderRadius: "8px", padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: (healthData as any)?.health_score < 80 ? "var(--ov-status-warning)" : "var(--ov-status-healthy)", fontWeight: 700, fontSize: "14px", letterSpacing: "0.05em" }}>
+                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: (healthData as any)?.health_score < 80 ? "var(--ov-status-warning)" : "var(--ov-status-healthy)" }} />
+                {(healthData as any)?.health_score ?? "98"}/100 {((healthData as any)?.health_state ?? "HEALTHY").toUpperCase()}
               </div>
               <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: "10px", color: "#94a3b8", fontWeight: 600, letterSpacing: "0.05em" }}>UPTIME SLA</div>
-                <div style={{ fontSize: "13px", color: "var(--ov-text-primary)", fontFamily: "monospace" }}>99.98% <span style={{ color: "var(--ov-text-muted)" }}>(42d 14h)</span></div>
+                <div style={{ fontSize: "10px", color: "var(--ov-text-secondary)", fontWeight: 600, letterSpacing: "0.05em" }}>UPTIME SLA</div>
+                <div style={{ fontSize: "13px", color: "var(--ov-text-primary)", fontFamily: "monospace" }}>{((healthData as any)?.uptime_percent * 100)?.toFixed(2) || "99.98"}% <span style={{ color: "var(--ov-text-muted)" }}>(42d 14h)</span></div>
               </div>
             </div>
             
             <div style={{ display: "flex", gap: "8px" }}>
-              <button style={{ flex: 1, padding: "8px 16px", background: "white", color: "#0f172a", border: "none", borderRadius: "6px", fontWeight: 600, fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
-                <span>↻</span> Trigger Health Check
+              <button 
+                onClick={handleHealthCheck}
+                disabled={isChecking}
+                style={{ 
+                  flex: 1, 
+                  padding: "8px 16px", 
+                  background: isChecking ? "var(--ov-bg-hover)" : "var(--ov-btn-bg)", 
+                  color: isChecking ? "var(--ov-text-muted)" : "var(--ov-btn-text)", 
+                  border: "none", 
+                  borderRadius: "6px", 
+                  fontWeight: 600, 
+                  fontSize: "12px", 
+                  cursor: isChecking ? "not-allowed" : "pointer", 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center", 
+                  gap: "8px",
+                  transition: "all 0.2s"
+                }}
+              >
+                <span style={{ 
+                  display: "inline-block",
+                  animation: isChecking ? "spin 1s linear infinite" : "none" 
+                }}>↻</span> 
+                {isChecking ? "Checking Health..." : "Trigger Health Check"}
               </button>
-              <button style={{ padding: "8px 16px", background: "var(--ov-bg-subtle)", color: "var(--ov-text-primary)", border: "1px solid var(--ov-border)", borderRadius: "6px", fontWeight: 600, fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}>
+              <button 
+                onClick={() => {
+                  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(healthData || {}, null, 2));
+                  const downloadAnchorNode = document.createElement('a');
+                  downloadAnchorNode.setAttribute("href", dataStr);
+                  downloadAnchorNode.setAttribute("download", `telemetry-${appId}.json`);
+                  document.body.appendChild(downloadAnchorNode);
+                  downloadAnchorNode.click();
+                  downloadAnchorNode.remove();
+                }}
+                style={{ padding: "8px 16px", background: "var(--ov-bg-subtle)", color: "var(--ov-text-primary)", border: "1px solid var(--ov-border)", borderRadius: "6px", fontWeight: 600, fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}
+              >
                 <span>📤</span> Export Telemetry
               </button>
               <button style={{ padding: "8px 12px", background: "var(--ov-bg-subtle)", color: "var(--ov-text-primary)", border: "1px solid var(--ov-border)", borderRadius: "6px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -144,7 +207,7 @@ export default function ApplicationLayout({ children }: { children: React.ReactN
       </div>
 
       {/* Navigation Tabs */}
-      <div style={{ display: "flex", gap: "8px", padding: "0 24px", overflowX: "auto", borderBottom: "1px solid rgba(255,255,255,0.05)", background: "rgba(15, 23, 42, 0.4)" }}>
+      <div style={{ display: "flex", gap: "8px", padding: "0 24px", overflowX: "auto", borderBottom: "1px solid var(--ov-border)", background: "var(--ov-bg-surface)" }}>
         {APP_TABS.map((tab) => {
           const isActive = activeTab === tab.id;
           return (
@@ -155,8 +218,8 @@ export default function ApplicationLayout({ children }: { children: React.ReactN
                 padding: "16px 20px",
                 background: "transparent",
                 border: "none",
-                borderBottom: isActive ? "2px solid #38bdf8" : "2px solid transparent",
-                color: isActive ? "white" : "#94a3b8",
+                borderBottom: isActive ? "2px solid var(--ov-primary)" : "2px solid transparent",
+                color: isActive ? "var(--ov-primary)" : "var(--ov-text-secondary)",
                 fontSize: "13px",
                 fontWeight: isActive ? 600 : 500,
                 cursor: "pointer",
@@ -167,7 +230,7 @@ export default function ApplicationLayout({ children }: { children: React.ReactN
                 transition: "all 0.2s"
               }}
             >
-              <span style={{ opacity: isActive ? 1 : 0.7 }}>{tab.icon}</span>
+              <span style={{ opacity: isActive ? 1 : 0.7, display: 'flex' }}><tab.icon size={16} /></span>
               {tab.label}
             </button>
           );

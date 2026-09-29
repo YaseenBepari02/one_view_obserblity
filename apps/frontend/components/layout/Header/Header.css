@@ -1,32 +1,224 @@
-/* components/layout/Header/Header.css — COMPONENT layer */
+/* components/layout/Header/Header.css — COMPONENT layer
+   Design: Salesforce Lightning header + Apple HIG toolbar */
 .ov-header {
   position: fixed;
   top: 0;
   right: 0;
   left: var(--ov-sidebar-width-compact);
   height: var(--ov-header-height);
-  background: var(--ov-bg-surface);
-  border-bottom: 1px solid var(--ov-border);
+  background: var(--ov-bg-sidebar-glass);
+  backdrop-filter: blur(48px) saturate(200%);
+  -webkit-backdrop-filter: blur(48px) saturate(200%);
+  border-bottom: none;
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--ov-space-4);
+  padding: 0 var(--ov-space-5);
   z-index: var(--ov-z-header);
   transition: left var(--ov-transition-slow);
 }
+
 .ov-header.sidebar-expanded {
   left: var(--ov-sidebar-width-expanded);
 }
+
 .ov-header-left {
   display: flex;
   align-items: center;
   gap: var(--ov-space-4);
 }
+
+.ov-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--ov-space-2);
+}
+
+.ov-header-app-selector {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--ov-bg-card);
+  border: 1px solid var(--ov-border);
+  border-radius: var(--ov-radius-md);
+  color: var(--ov-text-primary);
+  font-size: var(--ov-font-size-sm);
+  font-weight: var(--ov-font-weight-medium);
+  font-family: var(--ov-font-sans);
+  padding: 6px 32px 6px 12px;
+  cursor: pointer;
+  outline: none;
+  transition: all var(--ov-transition-fast);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+}
+
+.ov-header-app-selector:hover {
+  border-color: var(--ov-border-strong);
+  background-color: var(--ov-bg-card-hover);
+}
+
+.ov-header-app-selector:focus {
+  border-color: #0176D3;
+  box-shadow: 0 0 0 2px rgba(1, 118, 211, 0.25);
+}
+
+/* Time range strip */
+.ov-header-time-range {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--ov-bg-card);
+  border: 1px solid var(--ov-border);
+  border-radius: var(--ov-radius-md);
+  overflow: hidden;
+}
+
+.ov-header-time-btn {
+  padding: 5px var(--ov-space-3);
+  background: transparent;
+  border: none;
+  color: var(--ov-text-muted);
+  font-size: var(--ov-font-size-xs);
+  font-weight: var(--ov-font-weight-medium);
+  font-family: var(--ov-font-sans);
+  cursor: pointer;
+  transition: background var(--ov-transition-fast), color var(--ov-transition-fast);
+}
+
+.ov-header-time-btn:hover {
+  color: var(--ov-text-secondary);
+  background: var(--ov-bg-subtle);
+}
+
+/* Active time range → blue */
+.ov-header-time-btn.is-active {
+  background: var(--ov-header-time-active-bg);
+  color: var(--ov-header-time-active-color);
+  font-weight: var(--ov-font-weight-semibold);
+}
+
+.ov-header-refresh {
+  display: flex;
+  align-items: center;
+  gap: var(--ov-space-1);
+}
+
+/* Apple-style toolbar icon button */
+.ov-header-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid var(--ov-border);
+  border-radius: var(--ov-radius-md);
+  color: var(--ov-text-muted);
+  cursor: pointer;
+  transition:
+    background var(--ov-transition-fast),
+    border-color var(--ov-transition-fast),
+    color var(--ov-transition-fast);
+  position: relative;
+}
+
+.ov-header-icon-btn:hover {
+  background: var(--ov-bg-subtle);
+  border-color: var(--ov-border-strong);
+  color: var(--ov-text-primary);
+}
+
+.ov-header-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  background: var(--ov-status-critical);
+  color: var(--ov-text-on-primary);
+  font-size: var(--ov-font-size-2xs);
+  font-weight: var(--ov-font-weight-bold);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 1.5px solid var(--ov-bg-surface);
+}
+
+.ov-header-env {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--ov-bg-card);
+  border: 1px solid var(--ov-border);
+  border-radius: var(--ov-radius-md);
+  color: var(--ov-text-secondary);
+  font-size: var(--ov-font-size-xs);
+  font-weight: var(--ov-font-weight-medium);
+  font-family: var(--ov-font-sans);
+  padding: 6px 28px 6px 10px;
+  cursor: pointer;
+  outline: none;
+  transition: all var(--ov-transition-fast);
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+}
+
+.ov-header-env:hover {
+  border-color: var(--ov-border-strong);
+  background-color: var(--ov-bg-card-hover);
+}
+
+.ov-header-env:focus {
+  border-color: var(--ov-border-focus);
+  box-shadow: 0 0 0 2px var(--ov-primary-muted);
+}
+
+.ov-header-user {
+  display: flex;
+  align-items: center;
+  gap: var(--ov-space-2);
+  padding: var(--ov-space-1) var(--ov-space-2);
+  border-radius: var(--ov-radius-md);
+  cursor: pointer;
+  transition: background var(--ov-transition-fast);
+}
+
+.ov-header-user:hover {
+  background: var(--ov-bg-subtle);
+}
+
+.ov-header-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ov-primary) 0%, var(--ov-accent) 100%);
+  color: var(--ov-text-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--ov-font-size-xs);
+  font-weight: var(--ov-font-weight-bold);
+  box-shadow: var(--ov-btn-shadow);
+}
+
+.ov-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--ov-space-4);
+}
+
 .ov-header-right {
   display: flex;
   align-items: center;
   gap: var(--ov-space-3);
 }
+
 .ov-header-app-selector {
   appearance: none;
   -webkit-appearance: none;
@@ -45,13 +237,16 @@
   background-position: right 10px center;
   background-size: 14px;
 }
+
 .ov-header-app-selector:hover {
   border-color: var(--ov-border-strong);
   background-color: var(--ov-bg-card-hover);
 }
+
 .ov-header-app-selector:focus {
   border-color: var(--ov-primary);
 }
+
 .ov-header-time-range {
   display: flex;
   align-items: center;
@@ -61,6 +256,7 @@
   border-radius: var(--ov-radius-md);
   overflow: hidden;
 }
+
 .ov-header-time-btn {
   padding: var(--ov-space-1) var(--ov-space-2);
   background: transparent;
@@ -71,19 +267,23 @@
   cursor: pointer;
   transition: background var(--ov-transition-fast), color var(--ov-transition-fast);
 }
+
 .ov-header-time-btn:hover {
   color: var(--ov-text-secondary);
   background: var(--ov-bg-subtle);
 }
+
 .ov-header-time-btn.is-active {
   background: var(--ov-primary-muted);
   color: var(--ov-primary);
 }
+
 .ov-header-refresh {
   display: flex;
   align-items: center;
   gap: var(--ov-space-1);
 }
+
 .ov-header-icon-btn {
   display: flex;
   align-items: center;
@@ -98,10 +298,12 @@
   transition: background var(--ov-transition-fast), color var(--ov-transition-fast);
   position: relative;
 }
+
 .ov-header-icon-btn:hover {
   background: var(--ov-bg-subtle);
   color: var(--ov-text-primary);
 }
+
 .ov-header-badge {
   position: absolute;
   top: -4px;
@@ -118,6 +320,7 @@
   justify-content: center;
   padding: 0 4px;
 }
+
 .ov-header-env {
   appearance: none;
   -webkit-appearance: none;
@@ -136,13 +339,16 @@
   background-position: right 8px center;
   background-size: 12px;
 }
+
 .ov-header-env:hover {
   border-color: var(--ov-border-strong);
   background-color: var(--ov-bg-card-hover);
 }
+
 .ov-header-env:focus {
   border-color: var(--ov-primary);
 }
+
 .ov-header-user {
   display: flex;
   align-items: center;
@@ -152,9 +358,11 @@
   cursor: pointer;
   transition: background var(--ov-transition-fast);
 }
+
 .ov-header-user:hover {
   background: var(--ov-bg-subtle);
 }
+
 .ov-header-avatar {
   width: 28px;
   height: 28px;

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
@@ -17,11 +17,11 @@ function Gauge({ title, value, max = 100, unit = '%', color = '#73bf69' }: { tit
   const dashoffset = c - (percent / 100) * c;
   
   return (
-    <div style={{ background: '#181b1f', border: '1px solid #2c3235', padding: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ fontSize: '11px', color: '#c8c9ca', marginBottom: '12px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{title}</div>
+    <div style={{ background: 'var(--ov-bg-card)', border: '1px solid var(--ov-border)', borderRadius: '12px', boxShadow: 'var(--ov-shadow-sm)', padding: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ fontSize: '11px', color: 'var(--ov-text-secondary)', marginBottom: '12px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{title}</div>
       <div style={{ position: 'relative', width: '100px', height: '60px' }}>
         <svg width="100" height="60" viewBox="0 0 100 60">
-          <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#2c3235" strokeWidth="8" strokeLinecap="round" />
+          <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="var(--ov-border)" strokeWidth="8" strokeLinecap="round" />
           <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke={color} strokeWidth="8" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={dashoffset} />
         </svg>
         <div style={{ position: 'absolute', bottom: '0px', left: '0', right: '0', textAlign: 'center', fontSize: '14px', fontWeight: 'bold', color: color }}>
@@ -35,14 +35,14 @@ function Gauge({ title, value, max = 100, unit = '%', color = '#73bf69' }: { tit
 function StatBox({ label, value, subLabel, subValue }: { label: string, value: string | number, subLabel?: string, subValue?: string | number }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-      <div style={{ background: '#181b1f', border: '1px solid #2c3235', padding: '8px 12px', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <div style={{ fontSize: '11px', color: '#c8c9ca', marginBottom: '4px' }}>{label}</div>
-        <div style={{ fontSize: '16px', color: '#fff' }}>{value}</div>
+      <div style={{ background: 'var(--ov-bg-card)', border: '1px solid var(--ov-border)', borderRadius: '12px', boxShadow: 'var(--ov-shadow-sm)', padding: '8px 12px', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ fontSize: '11px', color: 'var(--ov-text-secondary)', marginBottom: '4px' }}>{label}</div>
+        <div style={{ fontSize: '16px', color: 'var(--ov-text-primary)' }}>{value}</div>
       </div>
       {subLabel && (
-        <div style={{ background: '#181b1f', border: '1px solid #2c3235', padding: '8px 12px', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div style={{ fontSize: '11px', color: '#c8c9ca', marginBottom: '4px' }}>{subLabel}</div>
-          <div style={{ fontSize: '16px', color: '#fff' }}>{subValue}</div>
+        <div style={{ background: 'var(--ov-bg-card)', border: '1px solid var(--ov-border)', borderRadius: '12px', boxShadow: 'var(--ov-shadow-sm)', padding: '8px 12px', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <div style={{ fontSize: '11px', color: 'var(--ov-text-secondary)', marginBottom: '4px' }}>{subLabel}</div>
+          <div style={{ fontSize: '16px', color: 'var(--ov-text-primary)' }}>{subValue}</div>
         </div>
       )}
     </div>
@@ -56,19 +56,19 @@ function GrafanaChart({ title, data, dataKeys, colors, yAxisUnit = '%' }: { titl
   })) || [];
 
   return (
-    <div style={{ background: '#181b1f', border: '1px solid #2c3235' }}>
-      <div style={{ padding: '8px 12px', textAlign: 'center', fontSize: '12px', color: '#c8c9ca', borderBottom: '1px solid #2c3235' }}>
+    <div style={{ background: 'var(--ov-bg-card)', border: '1px solid var(--ov-border)', borderRadius: '12px', boxShadow: 'var(--ov-shadow-sm)' }}>
+      <div style={{ padding: '8px 12px', textAlign: 'center', fontSize: '12px', color: 'var(--ov-text-secondary)', borderBottom: '1px solid var(--ov-border)' }}>
         {title}
       </div>
       <div style={{ height: '240px', padding: '12px 12px 0 0' }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={formatted}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#2c3235" vertical={false} />
-            <XAxis dataKey="time" stroke="#c8c9ca" fontSize={10} tickLine={false} axisLine={false} />
-            <YAxis stroke="#c8c9ca" fontSize={10} tickLine={false} axisLine={false} width={50} tickFormatter={(v) => v + yAxisUnit} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--ov-border)" vertical={false} />
+            <XAxis dataKey="time" stroke="var(--ov-text-secondary)" fontSize={10} tickLine={false} axisLine={false} />
+            <YAxis stroke="var(--ov-text-secondary)" fontSize={10} tickLine={false} axisLine={false} width={50} tickFormatter={(v) => v + yAxisUnit} />
             <Tooltip
-              contentStyle={{ backgroundColor: '#111217', borderColor: '#2c3235', color: '#c8c9ca', fontSize: '12px' }}
-              itemStyle={{ color: '#fff' }}
+              contentStyle={{ backgroundColor: 'var(--ov-bg-page)', borderColor: 'var(--ov-border)', color: 'var(--ov-text-secondary)', fontSize: '12px' }}
+              itemStyle={{ color: 'var(--ov-text-primary)' }}
             />
             {dataKeys.map((key, i) => (
               <Area
@@ -97,13 +97,13 @@ function CollapsibleSection({ title, children }: { title: string; children: Reac
     <div style={{ marginBottom: '8px' }}>
       <div 
         onClick={() => setIsOpen(!isOpen)}
-        style={{ padding: '8px', background: '#181b1f', border: '1px solid #2c3235', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+        style={{ padding: '8px', background: 'var(--ov-bg-card)', border: '1px solid var(--ov-border)', borderRadius: '12px', boxShadow: 'var(--ov-shadow-sm)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
       >
         <span style={{ fontSize: '10px', display: 'inline-block', transform: isOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }}>▶</span>
-        <span style={{ fontSize: '13px', fontWeight: 600, color: '#c8c9ca' }}>{title}</span>
+        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ov-text-secondary)' }}>{title}</span>
       </div>
       {isOpen && (
-        <div style={{ padding: '16px', background: '#111217', border: '1px solid #2c3235', borderTop: 'none' }}>
+        <div style={{ padding: '16px', background: 'var(--ov-bg-page)', border: '1px solid var(--ov-border)', borderTop: 'none' }}>
           {children}
         </div>
       )}
@@ -154,10 +154,10 @@ export default function NodeExporterDashboard() {
   })) || [];
 
   return (
-    <div style={{ backgroundColor: '#111217', padding: '16px', fontFamily: 'Inter, sans-serif', minHeight: '100vh', color: '#c8c9ca' }}>
+    <div style={{ backgroundColor: 'var(--ov-bg-page)', padding: '16px', fontFamily: 'Inter, sans-serif', minHeight: '100vh', color: 'var(--ov-text-secondary)' }}>
       
       {/* Section Header */}
-      <div style={{ fontSize: '14px', fontWeight: 600, color: '#fff', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ov-text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <span style={{ fontSize: '10px' }}>▼</span> Quick CPU / Mem / Disk
       </div>
 
@@ -184,7 +184,7 @@ export default function NodeExporterDashboard() {
       </div>
 
       {/* Section Header */}
-      <div style={{ fontSize: '14px', fontWeight: 600, color: '#fff', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ov-text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <span style={{ fontSize: '10px' }}>▼</span> Basic CPU / Mem / Net / Disk
       </div>
 
@@ -217,7 +217,7 @@ export default function NodeExporterDashboard() {
       </div>
       
       {/* Collapsible Sections */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', borderTop: '1px solid #2c3235', paddingTop: '8px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', borderTop: '1px solid var(--ov-border)', paddingTop: '8px' }}>
         <CollapsibleSection title="CPU / Memory / Net / Disk (7 panels)">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
             <GrafanaChart title="CPU Detail" data={timeSeriesCpu} dataKeys={["Busy System", "Busy User", "Busy Other"]} colors={['#ff9830', '#5794f2', '#8e24aa']} />

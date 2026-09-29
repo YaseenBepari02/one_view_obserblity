@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Activity, Server, Shield } from 'lucide-react';
-import { Badge } from '@/components/ui/Badge/Badge';
+import { ApplicationCard } from '@/components/ui/ApplicationCard/ApplicationCard';
 
 const apps = [
   {
@@ -52,59 +52,15 @@ export default function ApplicationsPage() {
         gap: 'var(--ov-space-5)',
       }}>
         {apps.map((app) => (
-          <Link
+          <ApplicationCard
             key={app.id}
-            href={`/applications/${app.id}`}
-            style={{
-              display: 'block',
-              padding: 'var(--ov-space-5)',
-              background: 'var(--ov-bg-card)',
-              border: '1px solid var(--ov-border)',
-              borderRadius: 'var(--ov-radius-xl)',
-              textDecoration: 'none',
-              transition: 'all 0.2s ease',
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.borderColor = app.color;
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'none';
-              e.currentTarget.style.borderColor = 'var(--ov-border)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--ov-space-4)' }}>
-              <div style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                width: 48, 
-                height: 48, 
-                borderRadius: 'var(--ov-radius-lg)', 
-                background: `color-mix(in srgb, ${app.color} 15%, transparent)`,
-                color: app.color 
-              }}>
-                <app.icon size={24} />
-              </div>
-              <Badge variant={app.status === 'healthy' ? 'success' : 'warning'}>
-                {app.status}
-              </Badge>
-            </div>
-            
-            <h2 style={{ fontSize: 'var(--ov-font-size-lg)', fontWeight: 'var(--ov-font-weight-semibold)', color: 'var(--ov-text-primary)', marginBottom: 'var(--ov-space-2)' }}>
-              {app.name}
-            </h2>
-            <p style={{ color: 'var(--ov-text-muted)', fontSize: 'var(--ov-font-size-sm)', marginBottom: 'var(--ov-space-4)' }}>
-              {app.description}
-            </p>
-            
-            <div style={{ display: 'flex', gap: 'var(--ov-space-2)' }}>
-              <Badge variant="info">{app.environment}</Badge>
-              <Badge variant="outline">View Details →</Badge>
-            </div>
-          </Link>
+            id={app.id}
+            name={app.name}
+            description={app.description}
+            status={app.status}
+            environment={app.environment}
+            icon={app.icon}
+          />
         ))}
       </div>
     </div>

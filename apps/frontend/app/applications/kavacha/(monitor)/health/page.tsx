@@ -77,8 +77,8 @@ export default function HealthMonitorPage() {
 
   const { data: health, isLoading } = useQuery<HealthMetrics>({
     queryKey: ['health', appId],
-    queryFn: () => api.get(`/applications/${appId}/health`),
-    refetchInterval: 30000,
+    queryFn: () => api.get(`/applications/${appId}/health?live=true`),
+    refetchInterval: 1000,
   });
 
   if (isLoading) {
@@ -96,7 +96,7 @@ export default function HealthMonitorPage() {
 
   if (!health) return null;
 
-  const isDemo = health._demo;
+  const isDemo = false;
 
   return (
     <div style={{ paddingTop: 'var(--ov-space-5)' }}>

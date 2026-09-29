@@ -1,4 +1,7 @@
-/* components/ui/Button/Button.css — COMPONENT layer */
+/* components/ui/Button/Button.css — COMPONENT layer
+   Design: Salesforce Lightning + Apple HIG
+   ALL buttons use Salesforce Action Blue (#0176D3).
+   ──────────────────────────────────────────────── */
 .ov-btn {
   display: inline-flex;
   align-items: center;
@@ -8,50 +11,85 @@
   border-radius: var(--ov-radius-md);
   font-family: var(--ov-font-sans);
   font-size: var(--ov-font-size-base);
-  font-weight: var(--ov-font-weight-medium);
+  font-weight: var(--ov-font-weight-semibold);
   padding: var(--ov-space-2) var(--ov-space-4);
   cursor: pointer;
-  transition: background var(--ov-transition-fast), border-color var(--ov-transition-fast);
+  letter-spacing: 0.01em;
+  transition:
+    background   var(--ov-transition-fast),
+    border-color var(--ov-transition-fast),
+    box-shadow   var(--ov-transition-fast),
+    transform    var(--ov-transition-fast);
   white-space: nowrap;
   line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+.ov-btn:active:not(:disabled) {
+  transform: scale(0.98);
 }
 .ov-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 .ov-btn-sm {
   font-size: var(--ov-font-size-sm);
   padding: var(--ov-space-1) var(--ov-space-3);
+  border-radius: var(--ov-radius-sm);
 }
 .ov-btn-lg {
   font-size: var(--ov-font-size-md);
-  padding: var(--ov-space-3) var(--ov-space-5);
+  padding: 0.625rem var(--ov-space-5);
+  border-radius: var(--ov-radius-lg);
 }
-/* Variants */
+
+/* ── Primary — filled blue (Salesforce Action Blue) ───────────── */
 .ov-btn-primary {
-  background: var(--ov-primary);
-  color: var(--ov-text-on-primary);
+  background: var(--ov-btn-bg);
+  border-color: var(--ov-btn-bg);
+  color: var(--ov-btn-text);
+  box-shadow: var(--ov-btn-shadow);
 }
 .ov-btn-primary:hover:not(:disabled) {
-  background: var(--ov-primary-hover);
+  background: var(--ov-btn-bg-hover);
+  border-color: var(--ov-btn-bg-hover);
+  box-shadow: var(--ov-btn-shadow-hover);
 }
+.ov-btn-primary:active:not(:disabled) {
+  background: var(--ov-btn-bg-active);
+  border-color: var(--ov-btn-bg-active);
+  box-shadow: none;
+}
+
+/* ── Secondary — outlined blue ────────────────────────────────── */
 .ov-btn-secondary {
   background: transparent;
-  border-color: var(--ov-border-strong);
-  color: var(--ov-text-secondary);
+  border-color: var(--ov-btn-outline-border);
+  color: var(--ov-btn-outline-color);
 }
 .ov-btn-secondary:hover:not(:disabled) {
-  background: var(--ov-bg-subtle);
-  color: var(--ov-text-primary);
+  background: var(--ov-btn-outline-hover-bg);
+  border-color: var(--ov-btn-outline-hover-border);
+  color: var(--ov-btn-outline-hover-color);
 }
+.ov-btn-secondary:active:not(:disabled) {
+  background: rgba(1, 118, 211, 0.18);
+}
+
+/* ── Ghost — text-only blue ───────────────────────────────────── */
 .ov-btn-ghost {
   background: transparent;
-  color: var(--ov-text-secondary);
+  border-color: transparent;
+  color: var(--ov-btn-outline-color);
 }
 .ov-btn-ghost:hover:not(:disabled) {
-  background: var(--ov-bg-subtle);
-  color: var(--ov-text-primary);
+  background: var(--ov-btn-outline-hover-bg);
+  color: var(--ov-btn-outline-hover-color);
 }
+.ov-btn-ghost:active:not(:disabled) {
+  background: rgba(1, 118, 211, 0.16);
+}
+
+/* ── Danger — destructive (red kept for safety semantics) ─────── */
 .ov-btn-danger {
   background: transparent;
   border-color: var(--ov-status-critical);
@@ -60,4 +98,6 @@
 .ov-btn-danger:hover:not(:disabled) {
   background: var(--ov-status-critical);
   color: var(--ov-text-on-primary);
+  box-shadow: 0 2px 8px rgba(194, 57, 52, 0.4);
 }
+

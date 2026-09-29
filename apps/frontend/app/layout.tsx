@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 
 // Styles
 import "./globals.css";
@@ -18,16 +18,18 @@ import "@/components/shared/DataFreshness/DataFreshness.css";
 import { QueryProvider } from '@/lib/api/query-provider';
 import { DashboardShell } from '@/components/layout/DashboardShell/DashboardShell';
 
-const ibmPlexSans = IBM_Plex_Sans({
+const inter = Inter({
   weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
-  variable: '--font-ibm-plex-sans',
+  variable: '--font-inter',
+  display: 'swap',
 });
 
 const jetBrainsMono = JetBrains_Mono({
   weight: ['400', '500', '700'],
   subsets: ['latin'],
   variable: '--font-jetbrains-mono',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -41,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${ibmPlexSans.variable} ${jetBrainsMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${jetBrainsMono.variable}`} suppressHydrationWarning>
       <body>
         <QueryProvider>
           <DashboardShell>
