@@ -17,6 +17,7 @@ docker-compose -f docker-compose.dev.yml up -d
 ### 2. Start the API
 ```bash
 $env:Path = "$env:LOCALAPPDATA\Programs\Python\Python312;$env:LOCALAPPDATA\Programs\Python\Python312\Scripts;$env:Path"
+// for my laptop not for you 
 python -m venv .venv                                                   
 .\.venv\Scripts\Activate.ps1
 cd apps/backend
@@ -27,6 +28,7 @@ uvicorn app.main:app --reload --port 8000
 ### 3. Start the frontend
 ```bash
 cd apps/frontend
+$env:Path += ";$env:ProgramFiles\nodejs"
 npm install
 npm run dev
 ```
@@ -48,8 +50,8 @@ Frontend (Next.js)  →  FastAPI Backend  →  PostgreSQL / Redis
 
 ```
 apps/
-  frontend/     Next.js frontend (TypeScript, Tailwind, Recharts)
-  backend/      FastAPI backend (Python, SQLAlchemy, Pydantic)
+  web/          Next.js frontend (TypeScript, Tailwind, Recharts)
+  api/          FastAPI backend (Python, SQLAlchemy, Pydantic)
 infra/
   docker/       Dockerfiles
   migrations/   Alembic migrations
@@ -64,3 +66,17 @@ tests/          Unit, integration, and frontend tests
 
 ## Environment Variables
 See `.env.example` for all configurable values.
+
+## Setting up the Kavacha Database (NextGen2)
+
+The Kavacha dashboard relies on a separate PostgreSQL database named `nextgen2`. To set this up locally:
+
+1. Ensure your PostgreSQL server is running locally on port `5432`.
+2. Connect to your PostgreSQL server (e.g., via pgAdmin or `psql`) with your root user (e.g., `postgres` / `Yaseen786#`).
+3. Create a new database named `nextgen2`:
+   ```sql
+   CREATE DATABASE nextgen2;
+   ```
+4. Connect to the `nextgen2` database.
+5. Run your seed script (e.g., `nextgen2_seed_50_rows.sql`) to create the tables and populate the initial dashboard data.
+6. The FastAPI backend will now automatically query this database to render the dashboard!
