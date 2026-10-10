@@ -15,7 +15,7 @@ import {
   Play,
   Calendar,
   DollarSign,
-  LifeBuoy,
+  LifeBuoy
 } from "lucide-react";
 
 const APP_TABS = [

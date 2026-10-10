@@ -14,7 +14,7 @@ import {
   Code, 
   BrainCircuit, 
   Server, 
-  Bell 
+  Bell
 } from "lucide-react";
 
 const APP_TABS = [

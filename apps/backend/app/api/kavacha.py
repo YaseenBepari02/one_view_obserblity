@@ -11,6 +11,7 @@ from app.services.kavacha_db import (
     get_overview_summary,
     get_users, get_user_count,
     get_applications, get_application_count,
+    get_app_business_impact,
     get_test_cases, get_test_case_stats,
     get_generations, get_generation_stats,
     get_executions, get_execution_stats,
@@ -51,6 +52,12 @@ async def kavacha_overview():
 async def kavacha_health():
     """Check Kavacha DB connectivity."""
     return _serialise(check_db_health())
+
+
+@router.get("/business-impact")
+async def kavacha_business_impact(limit: int = Query(5, ge=1, le=50)):
+    """Application level business impact metrics."""
+    return _serialise(get_app_business_impact(limit=limit))
 
 
 # ── Users ────────────────────────────────────────────────────────────────────

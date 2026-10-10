@@ -35,11 +35,9 @@ const Badge = ({ children, type }: { children: React.ReactNode, type: 'success' 
   );
 };
 
-const Card = ({ title, icon: Icon, children, action }: { title?: string, icon?: any, children: React.ReactNode, action?: React.ReactNode }) => (
-  <div style={{
-    background: 'var(--ov-bg-card)', border: '1px solid var(--ov-border)', borderRadius: '12px',
-    boxShadow: 'var(--ov-shadow-md)', display: 'flex', flexDirection: 'column',
-    overflow: 'hidden', height: '100%'
+const Card = ({ title, icon: Icon, children, action, className = '' }: { title?: string, icon?: any, children: React.ReactNode, action?: React.ReactNode, className?: string }) => (
+  <div className={`bento-card ${className}`} style={{
+    display: 'flex', flexDirection: 'column', height: '100%'
   }}>
     {(title || action) && (
       <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--ov-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -57,10 +55,8 @@ const Card = ({ title, icon: Icon, children, action }: { title?: string, icon?: 
 );
 
 const StatBox = ({ title, value, subtext, icon: Icon, trend }: any) => (
-  <div style={{
-    background: 'var(--ov-bg-card)', border: '1px solid var(--ov-border)', borderRadius: '12px',
-    padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px',
-    boxShadow: 'var(--ov-shadow-sm)', position: 'relative', overflow: 'hidden'
+  <div className="bento-card" style={{
+    padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px'
   }}>
     <div style={{ position: 'absolute', right: '-12px', bottom: '-12px', opacity: 0.04, pointerEvents: 'none' }}>
       <Icon size={100} color="var(--ov-text-primary)" />
@@ -92,10 +88,8 @@ const StatBox = ({ title, value, subtext, icon: Icon, trend }: any) => (
 );
 
 const MiniStatBox = ({ title, value, icon: Icon }: any) => (
-  <div style={{
-    background: 'var(--ov-bg-card)', border: '1px solid var(--ov-border)', borderRadius: '12px',
-    padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px',
-    boxShadow: 'var(--ov-shadow-sm)', position: 'relative', overflow: 'hidden'
+  <div className="bento-card" style={{
+    padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px'
   }}>
     <div style={{ position: 'absolute', right: '-8px', bottom: '-15px', opacity: 0.04, pointerEvents: 'none' }}>
       <Icon size={70} color="var(--ov-text-primary)" />
@@ -123,6 +117,78 @@ const ProgressBar = ({ label, percentage, color, subtext }: { label: string, per
   </div>
 );
 
+const NestedCircularProgress = ({ data }: { data: { label: string, percentage: number, color: string, subtext: string }[] }) => {
+  const size = 160;
+  const center = size / 2;
+  const strokeWidth = 10;
+  const gap = 6;
+  
+  return (
+    <div style={{ display: 'flex', gap: '24px', alignItems: 'center', marginTop: '16px' }}>
+      <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+        <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+          {data.map((item, index) => {
+            const radius = (size / 2) - strokeWidth - (index * (strokeWidth + gap));
+            const circumference = 2 * Math.PI * radius;
+            const strokeDashoffset = circumference - (item.percentage / 100) * circumference;
+            return (
+              <g key={item.label}>
+                <circle cx={center} cy={center} r={radius} stroke="var(--ov-border)" strokeWidth={strokeWidth} fill="none" />
+                <circle cx={center} cy={center} r={radius} stroke={item.color} strokeWidth={strokeWidth} fill="none" 
+                  strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} 
+                  strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.5s ease' }} 
+                />
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+      
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {data.map((item) => (
+          <div key={item.label}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+               <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: item.color }} />
+               <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--ov-text-primary)' }}>{item.label}</div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingLeft: '18px' }}>
+               <div style={{ fontSize: '11px', color: 'var(--ov-text-secondary)' }}>{item.subtext}</div>
+               <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--ov-text-primary)' }}>{item.percentage}%</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const CircularProgress = ({ label, percentage, color, subtext }: { label: string, percentage: number, color: string, subtext: string }) => {
+  const radius = 24;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+  
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+      <div style={{ position: 'relative', width: '56px', height: '56px', flexShrink: 0 }}>
+        <svg width="56" height="56" style={{ transform: 'rotate(-90deg)' }}>
+          <circle cx="28" cy="28" r={radius} stroke="var(--ov-border)" strokeWidth="5" fill="none" />
+          <circle cx="28" cy="28" r={radius} stroke={color} strokeWidth="5" fill="none" 
+            strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} 
+            strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.5s ease' }} 
+          />
+        </svg>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 700, color: 'var(--ov-text-primary)' }}>
+          {percentage}%
+        </div>
+      </div>
+      <div>
+        <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--ov-text-primary)', marginBottom: '4px' }}>{label}</div>
+        <div style={{ fontSize: '12px', color: 'var(--ov-text-secondary)' }}>{subtext}</div>
+      </div>
+    </div>
+  );
+};
+
 const COLORS = ['#a78bfa', '#3b82f6', '#10b981', '#f59e0b', '#f43f5e', '#06b6d4', '#ec4899', '#8b5cf6'];
 
 // --- Main Page Component ---
@@ -136,6 +202,7 @@ export default function KavachaPremiumOverview() {
   const { data: executionsData } = useQuery<any>({ queryKey: ['kavacha-executions'], queryFn: () => api.get('/kavacha/executions?limit=20') });
   const { data: supportData } = useQuery<any>({ queryKey: ['kavacha-support'], queryFn: () => api.get('/kavacha/support?limit=5') });
   const { data: appMapsData } = useQuery<any>({ queryKey: ['kavacha-app-maps'], queryFn: () => api.get('/kavacha/app-maps?limit=5') });
+  const { data: impactData } = useQuery<any>({ queryKey: ['kavacha-business-impact'], queryFn: () => api.get('/kavacha/business-impact') });
 
   if (loading1 || loading2 || loading3) {
     return (
@@ -170,22 +237,72 @@ export default function KavachaPremiumOverview() {
   const recentExecutions = executionsData?.items || [];
   const recentFailures = recentExecutions.filter((e: any) => e.result !== 'pass').slice(0, 5);
   const aiModels = aiStats?.by_model || [];
+  
+  // Using real data from the backend Postgres API
+  const businessImpacts = impactData || [];
 
-  // Calculate failures
-  const failCount = s.total_executions - s.pass_count;
+  // Calculate failures & errors for the donut chart
+  const failCount = s.fail_count || 0;
+  const errorCount = s.error_count || 0;
+  const skipCount = s.skip_count || 0;
+  const notPassCount = s.total_executions > 0 ? (s.total_executions - s.pass_count) : 0;
+  
+  const passPct = s.total_executions > 0 ? Math.round((s.pass_count / s.total_executions) * 100) : 0;
+  const failPct = s.total_executions > 0 ? Math.round((failCount / s.total_executions) * 100) : 0;
+  const errorPct = s.total_executions > 0 ? Math.round((errorCount / s.total_executions) * 100) : 0;
+  const skipPct = s.total_executions > 0 ? Math.round((skipCount / s.total_executions) * 100) : 0;
+
+  // Calculate Savings using real schema data passed from the backend API
+  const timeSavedHours = s.time_saved_hours || 0;
+  const resourcesSavedFTE = s.resource_saved_fte || 0;
+  const costSavings = s.cost_saved_usd || 0;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', position: 'relative', minHeight: '100vh', padding: '12px' }}>
+      {/* Background Ambient Glow */}
+      <div style={{ position: 'absolute', top: '-10%', left: '-10%', width: '50vw', height: '50vw', background: 'radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 60%)', filter: 'blur(80px)', zIndex: -1, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: '-10%', right: '-10%', width: '60vw', height: '60vw', background: 'radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, transparent 60%)', filter: 'blur(80px)', zIndex: -1, pointerEvents: 'none' }} />
+
+      <style>{`
+        .bento-card {
+          background: rgba(255, 255, 255, 0.02) !important;
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1px solid rgba(255, 255, 255, 0.05) !important;
+          border-radius: 16px !important;
+          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1) !important;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          position: relative;
+          overflow: hidden;
+        }
+        .bento-card:hover {
+          transform: translateY(-4px);
+          border-color: rgba(59, 130, 246, 0.4) !important;
+          box-shadow: 0 12px 40px rgba(59, 130, 246, 0.15), 0 4px 24px rgba(0, 0, 0, 0.3) !important;
+        }
+        .bento-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(59,130,246,0.6), transparent);
+          opacity: 0;
+          transition: opacity 0.4s ease;
+        }
+        .bento-card:hover::before {
+          opacity: 1;
+        }
+      `}</style>
 
       {/* Banner */}
-      <div style={{
-        background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.05))',
-        border: '1px solid rgba(139, 92, 246, 0.2)', borderRadius: '12px', padding: '24px',
+      <div className="bento-card" style={{
+        background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.05) 100%) !important',
+        padding: '24px 32px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}>
         <div>
-          <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--ov-text-primary)', margin: '0 0 8px 0' }}>
-            🛡️ Kavacha Test Automation Dashboard
+          <h2 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--ov-text-primary)', margin: '0 0 8px 0', letterSpacing: '-0.02em' }}>
+            Kavacha Test Automation Dashboard
           </h2>
           <p style={{ fontSize: '13px', color: 'var(--ov-text-secondary)', margin: 0 }}>
             Complete visibility across your applications, tests, and automation ecosystem.
@@ -198,19 +315,162 @@ export default function KavachaPremiumOverview() {
         </Link>
       </div>
 
-      {/* 1. The Full 14-Card KPI Grid (3 rows) */}
+      {/* Savings Summary Row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+        <div className="bento-card" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div style={{ position: 'absolute', right: '-15px', bottom: '-15px', opacity: 0.03, pointerEvents: 'none' }}><Clock size={100} color="var(--ov-text-primary)" /></div>
+          <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'linear-gradient(135deg, rgba(16,185,129,0.2), rgba(16,185,129,0.05))', border: '1px solid rgba(16,185,129,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1, boxShadow: '0 4px 12px rgba(16,185,129,0.1)' }}>
+            <Clock size={28} color="#10b981" />
+          </div>
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ov-text-secondary)', marginBottom: '4px' }}>Time Saved</div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+              <span style={{ fontSize: '24px', fontWeight: 700, color: 'var(--ov-text-primary)' }}>{timeSavedHours} hours</span>
+              <span style={{ fontSize: '12px', color: '#10b981', fontWeight: 600 }}>↑ 42%</span>
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--ov-text-muted)' }}>vs previous 30 days</div>
+          </div>
+        </div>
+
+        <div className="bento-card" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div style={{ position: 'absolute', right: '-15px', bottom: '-15px', opacity: 0.03, pointerEvents: 'none' }}><Users size={100} color="var(--ov-text-primary)" /></div>
+          <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(59,130,246,0.05))', border: '1px solid rgba(59,130,246,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1, boxShadow: '0 4px 12px rgba(59,130,246,0.1)' }}>
+            <Users size={28} color="#3b82f6" />
+          </div>
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ov-text-secondary)', marginBottom: '4px' }}>Resources Saved</div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+              <span style={{ fontSize: '24px', fontWeight: 700, color: 'var(--ov-text-primary)' }}>{resourcesSavedFTE} FTE</span>
+              <span style={{ fontSize: '12px', color: '#10b981', fontWeight: 600 }}>↑ 33%</span>
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--ov-text-muted)' }}>vs previous 30 days</div>
+          </div>
+        </div>
+
+        <div className="bento-card" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div style={{ position: 'absolute', right: '-15px', bottom: '-15px', opacity: 0.03, pointerEvents: 'none' }}><DollarSign size={100} color="var(--ov-text-primary)" /></div>
+          <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'linear-gradient(135deg, rgba(167,139,250,0.2), rgba(167,139,250,0.05))', border: '1px solid rgba(167,139,250,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1, boxShadow: '0 4px 12px rgba(167,139,250,0.1)' }}>
+            <DollarSign size={28} color="#a78bfa" />
+          </div>
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ov-text-secondary)', marginBottom: '4px' }}>Cost Saving Est.</div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+              <span style={{ fontSize: '24px', fontWeight: 700, color: 'var(--ov-text-primary)' }}>${costSavings.toLocaleString()}</span>
+              <span style={{ fontSize: '12px', color: '#10b981', fontWeight: 600 }}>↑ 28%</span>
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--ov-text-muted)' }}>vs previous 30 days</div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '16px' }}>
+        
+        {/* Left Side: 2x2 Grid of Original Pipeline KPIs */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignContent: 'start' }}>
+          <StatBox title="Test Cases" value={s.total_test_cases.toLocaleString()} subtext="Total proposed" icon={TestTubes} trend={8} />
+          <StatBox title="Generations" value={s.total_generations.toLocaleString()} subtext={`${autoRate}% automated`} icon={Sparkles} trend={15} />
+          <StatBox title="Executions" value={s.total_executions.toLocaleString()} subtext={`${passRate}% pass rate`} icon={Play} trend={-2} />
+          <StatBox title="Pass / Fail" value={`${s.pass_count} / ${notPassCount}`} subtext={`${failCount} hard fails`} icon={CheckCircle} />
+        </div>
+
+        {/* Right Side: Execution Results Donut Card */}
+        <Card 
+          title="Execution Results" 
+          icon={CheckCircle} 
+          action={<button style={{ background: 'transparent', border: '1px solid var(--ov-border)', color: '#3b82f6', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>View Details</button>}
+        >
+          <div style={{ fontSize: '13px', color: 'var(--ov-text-muted)', marginTop: '-8px', marginBottom: '24px' }}>
+            Overall test execution results in this period
+          </div>
+          
+          <div style={{ display: 'flex', gap: '24px', alignItems: 'center', padding: '0 12px 12px 12px' }}>
+            
+            {/* Donut Chart */}
+            <div style={{ width: '180px', height: '180px', position: 'relative', flexShrink: 0 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={[
+                      { name: 'Pass', value: s.pass_count, color: '#10b981' },
+                      { name: 'Fail', value: failCount, color: '#ef4444' },
+                      { name: 'Error', value: errorCount, color: '#f59e0b' },
+                      { name: 'Skip', value: skipCount, color: '#94a3b8' }
+                    ].filter(d => d.value > 0 || d.name === 'Pass' || d.name === 'Fail')}
+                    innerRadius={65}
+                    outerRadius={90}
+                    paddingAngle={2}
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    <Cell key="Pass" fill="#10b981" />
+                    <Cell key="Fail" fill="#ef4444" />
+                    <Cell key="Error" fill="#f59e0b" />
+                    <Cell key="Skip" fill="#94a3b8" />
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ background: 'var(--ov-bg-card)', border: '1px solid var(--ov-border)', borderRadius: '8px' }}
+                    itemStyle={{ color: 'var(--ov-text-primary)' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+                <span style={{ fontSize: '28px', fontWeight: 700, color: 'var(--ov-text-primary)', lineHeight: '1' }}>{s.total_executions}</span>
+                <span style={{ fontSize: '11px', color: 'var(--ov-text-secondary)', marginTop: '4px' }}>Executions</span>
+              </div>
+            </div>
+            
+            {/* Legend / Metrics List */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--ov-border)' }}>
+                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                   <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10b981' }} />
+                   <span style={{ fontSize: '13px', color: 'var(--ov-text-secondary)', fontWeight: 500 }}>Pass</span>
+                 </div>
+                 <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ov-text-secondary)' }}>
+                   {s.pass_count} <span style={{ color: 'var(--ov-text-muted)', fontWeight: 400, margin: '0 2px' }}>/</span> {s.total_executions} <span style={{ color: 'var(--ov-text-muted)', fontWeight: 400, marginLeft: '4px' }}>({passPct}%)</span>
+                 </div>
+               </div>
+               
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--ov-border)' }}>
+                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                   <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444' }} />
+                   <span style={{ fontSize: '13px', color: 'var(--ov-text-secondary)', fontWeight: 500 }}>Fail</span>
+                 </div>
+                 <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ov-text-secondary)' }}>
+                   {failCount} <span style={{ color: 'var(--ov-text-muted)', fontWeight: 400, margin: '0 2px' }}>/</span> {s.total_executions} <span style={{ color: 'var(--ov-text-muted)', fontWeight: 400, marginLeft: '4px' }}>({failPct}%)</span>
+                 </div>
+               </div>
+               
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--ov-border)' }}>
+                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                   <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#f59e0b' }} />
+                   <span style={{ fontSize: '13px', color: 'var(--ov-text-secondary)', fontWeight: 500 }}>Error</span>
+                 </div>
+                 <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ov-text-secondary)' }}>
+                   {errorCount} <span style={{ color: 'var(--ov-text-muted)', fontWeight: 400, margin: '0 2px' }}>/</span> {s.total_executions} <span style={{ color: 'var(--ov-text-muted)', fontWeight: 400, marginLeft: '4px' }}>({errorPct}%)</span>
+                 </div>
+               </div>
+               
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0' }}>
+                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                   <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#94a3b8' }} />
+                   <span style={{ fontSize: '13px', color: 'var(--ov-text-secondary)', fontWeight: 500 }}>Skip</span>
+                 </div>
+                 <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ov-text-secondary)' }}>
+                   {skipCount} <span style={{ color: 'var(--ov-text-muted)', fontWeight: 400, margin: '0 2px' }}>/</span> {s.total_executions} <span style={{ color: 'var(--ov-text-muted)', fontWeight: 400, marginLeft: '4px' }}>({skipPct}%)</span>
+                 </div>
+               </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* 2. Core System Metrics Grid */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {/* Row 1: 4 cards */}
+        {/* Consolidated row of remaining 4 technical metrics */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
           <StatBox title="Users" value={s.total_users} subtext={`${s.admin_users} admins`} icon={Users} trend={5} />
           <StatBox title="Applications" value={s.total_applications} subtext="Active apps" icon={AppWindow} trend={12} />
-          <StatBox title="Test Cases" value={s.total_test_cases.toLocaleString()} subtext="Total proposed" icon={TestTubes} trend={8} />
-          <StatBox title="Generations" value={s.total_generations.toLocaleString()} subtext={`${autoRate}% automated`} icon={Sparkles} trend={15} />
-        </div>
-        {/* Row 2: 4 cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-          <StatBox title="Executions" value={s.total_executions.toLocaleString()} subtext={`${passRate}% pass rate`} icon={Play} trend={-2} />
-          <StatBox title="Pass / Fail" value={`${s.pass_count} / ${failCount}`} subtext={`${failCount} errors`} icon={CheckCircle} />
           <StatBox title="AI Cost" value={`$${(s.total_ai_cost_usd || 0).toFixed(2)}`} subtext={`${s.total_ai_calls} calls`} icon={DollarSign} trend={4} />
           <StatBox title="Active Schedules" value={s.total_schedules || 0} subtext="Total schedules" icon={Calendar} />
         </div>
@@ -289,18 +549,18 @@ export default function KavachaPremiumOverview() {
       {/* 3. Mixed Section: Reliability, AI Table, Activity */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr 1fr', gap: '24px' }}>
         <Card title="Automation Reliability" icon={Settings}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '8px' }}>
-            <ProgressBar label="Generation Success Rate" percentage={82} color="#3b82f6" subtext={`${s.generated} / ${s.total_test_cases}`} />
-            <ProgressBar label="Scheduled Run Success Rate" percentage={91} color="#10b981" subtext="132 / 145" />
-            <ProgressBar label="Crawl Success Rate" percentage={87} color="#a78bfa" subtext="39 / 45" />
-          </div>
+          <NestedCircularProgress data={[
+            { label: "Generation Success Rate", percentage: 82, color: "#3b82f6", subtext: `${s.generated} / ${s.total_test_cases}` },
+            { label: "Scheduled Run Success Rate", percentage: 91, color: "#10b981", subtext: "132 / 145" },
+            { label: "Crawl Success Rate", percentage: 87, color: "#a78bfa", subtext: "39 / 45" }
+          ]} />
         </Card>
         <Card title="AI Usage Stats" icon={Cpu}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', background: 'var(--ov-bg-subtle)', padding: '12px', borderRadius: '8px', marginBottom: '16px' }}>
             <div><div style={{ fontSize: '11px', color: 'var(--ov-text-secondary)', marginBottom: '4px' }}>Total Calls</div><div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ov-text-primary)' }}>{s.total_ai_calls}</div></div>
-            <div><div style={{ fontSize: '11px', color: 'var(--ov-text-secondary)', marginBottom: '4px' }}>Total Tokens</div><div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ov-text-primary)' }}>1.3M</div></div>
+            <div><div style={{ fontSize: '11px', color: 'var(--ov-text-secondary)', marginBottom: '4px' }}>Total Tokens</div><div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ov-text-primary)' }}>{((s.total_ai_input_tokens + s.total_ai_output_tokens) / 1000).toFixed(1)}K</div></div>
             <div><div style={{ fontSize: '11px', color: 'var(--ov-text-secondary)', marginBottom: '4px' }}>Total Cost</div><div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ov-text-primary)' }}>${(s.total_ai_cost_usd || 0).toFixed(2)}</div></div>
-            <div><div style={{ fontSize: '11px', color: 'var(--ov-text-secondary)', marginBottom: '4px' }}>Avg Latency</div><div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ov-text-primary)' }}>1.8s</div></div>
+            <div><div style={{ fontSize: '11px', color: 'var(--ov-text-secondary)', marginBottom: '4px' }}>Avg Latency</div><div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ov-text-primary)' }}>{((aiStats?.avg_latency_ms || 0) / 1000).toFixed(1)}s</div></div>
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
             <thead>
@@ -315,9 +575,9 @@ export default function KavachaPremiumOverview() {
               {aiModels.length > 0 ? aiModels.map((item: any, i: number) => (
                 <tr key={i} style={{ borderBottom: '1px solid var(--ov-border)' }}>
                   <td style={{ padding: '8px', color: 'var(--ov-text-primary)', fontWeight: 500 }}>{item.model}</td>
-                  <td style={{ padding: '8px', color: 'var(--ov-text-secondary)' }}>{item.calls}</td>
-                  <td style={{ padding: '8px', color: 'var(--ov-text-secondary)' }}>-</td>
-                  <td style={{ padding: '8px', color: 'var(--ov-text-primary)' }}>${parseFloat(item.cost).toFixed(2)}</td>
+                  <td style={{ padding: '8px', color: 'var(--ov-text-secondary)' }}>{item.call_count}</td>
+                  <td style={{ padding: '8px', color: 'var(--ov-text-secondary)' }}>{((item.input_tokens + item.output_tokens) / 1000).toFixed(1)}K</td>
+                  <td style={{ padding: '8px', color: 'var(--ov-text-primary)' }}>${parseFloat(item.total_cost).toFixed(2)}</td>
                 </tr>
               )) : (
                 <tr>
@@ -358,76 +618,6 @@ export default function KavachaPremiumOverview() {
         </Card>
       </div>
 
-      {/* 4. Charts Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '24px' }}>
-        <Card title="Execution Trend">
-          <div style={{ height: '220px', width: '100%' }}>
-            <ResponsiveContainer>
-              <AreaChart data={executionTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorPassed" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#10b981" stopOpacity={0.3} /><stop offset="95%" stopColor="#10b981" stopOpacity={0} /></linearGradient>
-                  <linearGradient id="colorFailed" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#f43f5e" stopOpacity={0.3} /><stop offset="95%" stopColor="#f43f5e" stopOpacity={0} /></linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--ov-text-muted)' }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--ov-text-muted)' }} />
-                <Tooltip contentStyle={{ background: '#111217', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', color: 'var(--ov-text-primary)' }} />
-                <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', color: 'var(--ov-text-secondary)' }} />
-                <Area type="monotone" dataKey="passed" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorPassed)" name="Passed" />
-                <Area type="monotone" dataKey="failed" stroke="#f43f5e" strokeWidth={2} fillOpacity={1} fill="url(#colorFailed)" name="Failed" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        <Card title="Test Case Distribution">
-          <div style={{ display: 'flex', alignItems: 'center', height: '220px' }}>
-            <div style={{ width: '160px', height: '160px', position: 'relative' }}>
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie data={testTypeData} innerRadius={50} outerRadius={70} paddingAngle={2} dataKey="value" stroke="none">
-                    {testTypeData.map((entry: any, index: number) => <Cell key={`cell-${index}`} fill={entry.color} />)}
-                  </Pie>
-                  <Tooltip contentStyle={{ background: '#111217', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', color: 'var(--ov-text-primary)' }} />
-                </PieChart>
-              </ResponsiveContainer>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ov-text-primary)', fontFamily: 'monospace' }}>{s.total_test_cases}</span>
-                <span style={{ fontSize: '10px', color: 'var(--ov-text-muted)' }}>TESTS</span>
-              </div>
-            </div>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '16px' }}>
-              {testTypeData.map((item: any) => (
-                <div key={item.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: item.color }} />
-                    <span style={{ fontSize: '11px', color: 'var(--ov-text-secondary)', textTransform: 'uppercase' }}>{item.name}</span>
-                  </div>
-                  <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--ov-text-primary)' }}>{item.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Card>
-
-        <Card title="AI Trend (Cost/Calls)">
-          <div style={{ height: '220px', width: '100%' }}>
-            {aiTrendData.length > 0 ? (
-              <ResponsiveContainer>
-                <ComposedChart data={aiTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--ov-text-muted)' }} dy={10} />
-                  <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--ov-text-muted)' }} tickFormatter={(v) => `$${v}`} />
-                  <Tooltip contentStyle={{ background: '#111217', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px' }} />
-                  <Bar yAxisId="left" dataKey="cost" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Cost ($)" maxBarSize={30} />
-                </ComposedChart>
-              </ResponsiveContainer>
-            ) : (
-              <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ov-text-muted)', fontSize: '13px' }}>No trend data</div>
-            )}
-          </div>
-        </Card>
-      </div>
 
       {/* 5. Bottom Tables */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
@@ -483,6 +673,67 @@ export default function KavachaPremiumOverview() {
           </table>
         </Card>
       </div>
+
+      {/* Application Business Impact Table */}
+      <Card title="Application Business Impact" action={<span style={{ color: 'var(--ov-text-muted)', fontSize: '13px' }}>Applications ranked by business value delivered through test automation</span>}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' }}>
+          <thead>
+            <tr style={{ color: 'var(--ov-text-muted)', borderBottom: '1px solid var(--ov-border)' }}>
+              <th style={{ padding: '16px 12px', fontWeight: 600 }}>#</th>
+              <th style={{ padding: '16px 12px', fontWeight: 600 }}>Application</th>
+              <th style={{ padding: '16px 12px', fontWeight: 600 }}>Time Saved (hrs)</th>
+              <th style={{ padding: '16px 12px', fontWeight: 600 }}>Cost Savings (₹)</th>
+              <th style={{ padding: '16px 12px', fontWeight: 600 }}>Automation Coverage</th>
+              <th style={{ padding: '16px 12px', fontWeight: 600 }}>Pass Rate</th>
+              <th style={{ padding: '16px 12px', fontWeight: 600 }}>Critical Issues</th>
+              <th style={{ padding: '16px 12px', fontWeight: 600 }}>Business Priority</th>
+            </tr>
+          </thead>
+          <tbody>
+            {businessImpacts.map((item: any, idx: number) => {
+              const priorityColors: Record<string, string> = {
+                'Critical': 'rgba(239, 68, 68, 0.15)',
+                'High': 'rgba(249, 115, 22, 0.15)',
+                'Medium': 'rgba(234, 179, 8, 0.15)',
+                'Low': 'rgba(16, 185, 129, 0.15)'
+              };
+              const priorityTextColors: Record<string, string> = {
+                'Critical': '#ef4444',
+                'High': '#f97316',
+                'Medium': '#eab308',
+                'Low': '#10b981'
+              };
+              
+              const coverageColor = item.automation_coverage >= 80 ? 'success' : item.automation_coverage >= 50 ? 'warning' : 'error';
+              
+              return (
+                <tr key={item.id} style={{ borderBottom: '1px solid var(--ov-border)' }}>
+                  <td style={{ padding: '16px 12px', color: 'var(--ov-text-secondary)' }}>{idx + 1}</td>
+                  <td style={{ padding: '16px 12px', color: 'var(--ov-text-primary)', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: COLORS[idx % COLORS.length], display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                      <AppWindow size={16} />
+                    </div>
+                    {item.name}
+                  </td>
+                  <td style={{ padding: '16px 12px', color: 'var(--ov-text-primary)', fontWeight: 600 }}>{item.time_saved_hours}</td>
+                  <td style={{ padding: '16px 12px', color: 'var(--ov-text-primary)', fontWeight: 600 }}>₹{item.cost_savings_usd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td style={{ padding: '16px 12px' }}><Badge type={coverageColor}>{item.automation_coverage}%</Badge></td>
+                  <td style={{ padding: '16px 12px', color: 'var(--ov-text-secondary)', fontWeight: 500 }}>{item.pass_rate}%</td>
+                  <td style={{ padding: '16px 12px', color: item.critical_issues > 0 ? '#ef4444' : 'var(--ov-text-secondary)', fontWeight: item.critical_issues > 0 ? 600 : 400 }}>{item.critical_issues}</td>
+                  <td style={{ padding: '16px 12px' }}>
+                    <div style={{ padding: '4px 12px', borderRadius: '12px', display: 'inline-block', fontSize: '12px', fontWeight: 600, background: priorityColors[item.business_priority] || priorityColors['Medium'], color: priorityTextColors[item.business_priority] || priorityTextColors['Medium'] }}>
+                      {item.business_priority}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+            {businessImpacts.length === 0 && (
+              <tr><td colSpan={8} style={{ padding: '24px', textAlign: 'center', color: 'var(--ov-text-muted)' }}>No application impact data available.</td></tr>
+            )}
+          </tbody>
+        </table>
+      </Card>
 
     </div>
   );

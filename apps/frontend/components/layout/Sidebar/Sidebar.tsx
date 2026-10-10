@@ -7,7 +7,8 @@ import { useAppStore } from '@/lib/stores/app-store';
 import {
   LayoutDashboard, AppWindow, HeartPulse, ScrollText,
   BarChart3, DollarSign, Server, Bell, Plug, Network,
-  Cpu, CircleDashed, Settings, ChevronLeft, ChevronRight, ChevronDown
+  Cpu, CircleDashed, Settings, ChevronLeft, ChevronRight, ChevronDown,
+  Zap, LineChart
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -21,9 +22,9 @@ const NAV_ITEMS = [
   { id: 'infrastructure', label: 'Infrastructure & Docker', href: '/infrastructure', icon: Server },
 
   { section: 'APPLICATION INTEL' },
-  { id: 'rag-analytics', label: 'Netra RAG Analytics', href: '/rag-analytics', icon: Cpu, badge: 'AI', badgeColor: '#4c1d95', badgeTextColor: '#c084fc' },
-  { id: 'api-usage', label: 'API Usage & Tokens', href: '/api-usage', icon: CircleDashed },
-  { id: 'cost', label: 'Cost & Cloud Spend', href: '/cost', icon: DollarSign },
+  { id: 'ai-costs', label: 'AI Usage & Costs', href: '/ai-costs', icon: Cpu, badge: 'AI', badgeColor: '#4c1d95', badgeTextColor: '#c084fc' },
+  { id: 'optimization', label: 'Optimization', href: '/optimization', icon: Zap },
+  { id: 'forecast', label: 'Forecast', href: '/forecast', icon: LineChart },
 
   { section: 'MANAGEMENT' },
   { id: 'alerts', label: 'Alerts & Incidents', href: '/alerts', icon: Bell, badge: '1 Warn', badgeColor: '#78350f', badgeTextColor: '#fbbf24' },

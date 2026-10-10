@@ -66,7 +66,6 @@ tests/          Unit, integration, and frontend tests
 
 ## Environment Variables
 See `.env.example` for all configurable values.
-
 ## Setting up the Kavacha Database (NextGen2)
 
 The Kavacha dashboard relies on a separate PostgreSQL database named `nextgen2`. To set this up locally:
